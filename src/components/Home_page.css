@@ -1,0 +1,151 @@
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .popup .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+
+    cursor: pointer;
+  }
+  /* //////////////////////////// */
+  
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    background-color: #f9f9f9;
+    display:block;
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+  ul{
+    list-style-type: none;
+    overflow: hidden;
+    background-color: blue;
+    border-radius: 10px;
+  }
+  li{
+   float: left;
+  }
+  
+   .user{
+    float: right;
+    margin-top: 9px;
+    margin-right: 20px;
+   }
+   .user img{
+    width: 39px;
+    height: 39px;
+    overflow: hidden;
+    border-radius: 0%;
+    border: 0;
+    cursor: pointer;
+    visibility: visible;
+    padding: 0;
+   }
+  li a{
+    display: block;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    padding: 16px 14px;
+  }
+  li:hover{
+    background-color: orange;
+  }
+  
+  .fa-user-circle:before{
+    color: white;
+    align-items: end;
+  }
+  .MNIT_name{
+    display: flex;
+    justify-content: center;
+    font-size: 13px;
+  }
+  .MNIT_name img{
+    width: 10%;
+    height: 10%;
+    padding: 10px;
+  }
+  .job-item {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 20px;
+      margin-top: 20px;
+      position: relative;
+    display: flex;
+    border-bottom: 10px solid orange;
+  }
+    
+    .job-item .btn-primary {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      border: 1px solid ;
+      color: white;
+      background-color: blue;
+      text-decoration: none;
+      padding: 5px;
+      border-radius: 6px;
+    }
+    .job-item .btn-primary:hover{
+      background-color: rgb(67, 67, 200);
+  }
+  .fa-user-alt:before {
+      /* content: "\f3c5"; */
+      content:icon;
+      color: black;
+      padding: 5px;
+      align-items: start;
+  }
+  .faCalenderAlt:before {
+      content: "\f073";
+      color: black;
+      padding: 5px;
+  }
+  small {
+      font-size: medium;
+  }
+  .col-sm-12.col-md-4.d-flex.flex-column.align-items-start.align-items-md-end.justify-content-center{
+  margin-top: 20px;
+  }
+  h2 {
+      display: block;
+      font-size: 1.5em;
+      margin-block-start: 0.10em;
+      margin-block-end: 0.83em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      font-weight: bold;
+      unicode-bidi: isolate;
+      text-decoration: none;
+      cursor: pointer;;
+  }
+  .me-3{
+      padding: 20px 0px;
+      
+  }
+  .mb-3::after{
+    content: '';
+    display: block;
+    width: 40%; /* Less than half the width of the parent element */
+    height: 3px; /* Adjust height of the underline */
+    background-color: blue; /* Color of the underline */
+    left: 50%;
+    bottom: -5px;
+  }
+  
