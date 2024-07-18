@@ -1,36 +1,139 @@
-// src/components/Home.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Home_page.css';  // Adjust the path as needed
-//mport 'bootstrap/dist/css/bootstrap.min.css';
+import { useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserAlt, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import logo from './images/Mnit_logo.png';  // Adjust the path as needed
-import userIcon from './images/icons8-user-50.png';  // Adjust the path as needed
-import LoginRegistrationForm from './LoginRegistrationForm';  // Adjust the path as needed
+import { faUserAlt, faCalendarAlt, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import './Home_page.css';
+import logo from './images/Mnit_logo.png';
+import userIcon from './images/icons8-user-50.png';
+import RegistrationForm from './RegistrationForm';
 
 const Home = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobs, setJobs] = useState([]);
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(true);
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [showSignupPage, setShowSignupPage] = useState(false);
+  const [resumeUploaded, setResumeUploaded] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false); // Changed default to false
+  const jobsPerPage = 5;
+
+  const [loginData, setLoginData] = useState({ username: '', password: '' });
+  const [signupData, setSignupData] = useState({ first_name: '', email: '', username: '', password: '' });
+  const [loginErrors, setLoginErrors] = useState({});
+  const [signupErrors, setSignupErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+
+  const history = useHistory();
 
   useEffect(() => {
-    axios.get('http://172.18.13.21:8000/internships/')
-      .then(response => {
-        setJobs(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the jobs!', error);
-      });
+    axios.get('http://127.0.0.1:8000/internships/')
+      .then(response => setJobs(response.data))
+      .catch(error => console.error('There was an error fetching the jobs!', error));
   }, []);
 
-  const handleLoginClick = () => {
-    setShowLoginModal(true);
+  const handleLoginChange = (e) => {
+    setLoginData({ ...loginData, [e.target.name]: e.target.value });
+    setLoginErrors({ ...loginErrors, [e.target.name]: '' });
   };
 
-  const handleCloseLoginModal = () => {
-    setShowLoginModal(false);
+  const handleSignupChange = (e) => {
+    setSignupData({ ...signupData, [e.target.name]: e.target.value });
+    setSignupErrors({ ...signupErrors, [e.target.name]: '' });
   };
+
+  const validateLogin = () => {
+    const errors = {};
+    if (!loginData.username) errors.username = 'Username is required';
+    if (!loginData.password) errors.password = 'Password is required';
+    return errors;
+  };
+
+  const validateSignup = () => {
+    const errors = {};
+    if (!signupData.first_name) errors.first_name = 'First name is required';
+    if (!signupData.email) errors.email = 'Email is required';
+    if (!signupData.username) errors.username = 'Username is required';
+    if (!signupData.password) errors.password = 'Password is required';
+    return errors;
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const errors = validateLogin();
+    setLoginErrors(errors);
+    if (Object.keys(errors).length === 0) {
+      axios.post('http://127.0.0.1:8000/auth/login/', loginData)
+        .then(response => {
+          setLoggedInUser(response.data.user_id);
+          setShowLoginModal(false);
+          //setShowRegistrationForm(true); // Show registration form after login
+        })
+        .catch(error => {
+          if (error.response && error.response.data) {
+            setLoginErrors(error.response.data);
+          } else {
+            setLoginErrors({ general: 'Invalid username or password' });
+          }
+        });
+    }
+  };
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    const errors = validateSignup();
+    setSignupErrors(errors);
+    if (Object.keys(errors).length === 0) {
+      axios.post('http://127.0.0.1:8000/auth/signup/', signupData)
+        .then(response => {
+          alert('Signup successful! Please log in.');
+          setShowLoginModal(true);
+          setSignupData({ first_name: '', email: '', username: '', password: '' });
+        })
+        .catch(error => {
+          if (error.response && error.response.data) {
+            setSignupErrors(error.response.data);
+          } else {
+            setSignupErrors({ general: 'Signup error. Please try again.' });
+          }
+        });
+    }
+  };
+
+  const handleLogout = () => {
+    setLoggedInUser(null);
+  };
+
+  const handleResumeUpload = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type === 'application/pdf') {
+      setResumeUploaded(true);
+    } else {
+      alert('Please upload a PDF file.');
+    }
+  };
+
+  const handleApplyNowClick = () => {
+    if (loggedInUser) {
+      setShowRegistrationForm(true);
+    } else {
+      setShowLoginModal(true);
+    }
+  };
+
+  const handlePrevClick = () => {
+    setCurrentPage(prevPage => Math.max(prevPage - 1, 1));
+  };
+
+  const handleNextClick = () => {
+    setCurrentPage(prevPage => Math.min(prevPage + 1, Math.ceil(jobs.length / jobsPerPage)));
+  };
+
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
+  const totalPages = Math.ceil(jobs.length / jobsPerPage);
 
   return (
     <div>
@@ -50,56 +153,153 @@ const Home = () => {
           <li><a className="home" href="#">Home</a></li>
           <li><a className="about" href="#">About</a></li>
           <li><a className="contact" href="#">Contact</a></li>
-          <div className="user" onClick={handleLoginClick}>
-            <img src={userIcon} alt="login" />
-          </div>
+          <li><a className="myapplication" href="#">My Applications</a></li>
+          {loggedInUser ? (
+            <>
+              <li className="user1">
+              <span className="user-id-label">User_id :</span>{loggedInUser}</li>
+              <li className="logout" onClick={handleLogout}>Logout</li>
+            </>
+          ) : (
+            <div className="user" onClick={() => setShowLoginModal(true)}>
+              <img src={userIcon} alt="login" />
+            </div>
+          )}
         </ul>
       </nav>
 
-      <div className="tab-content">
-        <div id="tab-1" className="tab-pane fade show p-0 active">
-          {jobs.map((job, index) => (
-            <div key={index} className="job-item p-4 mb-4" onClick={() => setSelectedJob(job)}>
-              <div className="row g-4">
-                <div className="col-sm-12 col-md-8 d-flex align-items-center">
-                  <div className="text-start ps-4">
-                    <h2 className="mb-3">{job.Title}</h2>
-                    <span className="text-truncate me-3"><FontAwesomeIcon icon={faUserAlt} className="text-primary me-2" />{job.Mentor}</span>
+      {!showRegistrationForm && (
+        <div className="tab-content">
+          <div id="tab-1" className="tab-pane fade show p-0 active">
+            {currentJobs.map((job, index) => (
+              <div key={index} className="job-item p-4 mb-4" onClick={() => setSelectedJob(job)}>
+                <div className="row g-4">
+                  <div className="col-sm-12 col-md-8 d-flex align-items-center">
+                    <div className="text-start ps-4">
+                      <h2 className="mb-3">{job.Title}</h2>
+                      <span className="text-truncate me-3">
+                        <FontAwesomeIcon icon={faUserAlt} className="text-primary me-2" /> {job.Mentor}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div className="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
-                  <div className="d-flex">
-                    <a className="btn btn-primary" href="#">Apply Now</a>
+                  <div className="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                    <div className="d-flex">
+                      <button className="btn btn-primary" onClick={handleApplyNowClick}>Apply Now</button>
+                    </div>
+                    <small className="text-truncate">
+                      <FontAwesomeIcon icon={faCalendarAlt} className="text-primary me-2" /> Duration: {job.Duration}
+                    </small>
                   </div>
-                  <small className="text-truncate"><FontAwesomeIcon icon={faCalendarAlt} className="text-primary me-2" />Duration: {job.Duration}</small>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {selectedJob && (
-        <div id="job-popup" className="popup">
+        <div id="job-popup" className={`popup ${selectedJob ? 'active' : ''}`}>
           <div className="popup-content">
             <span className="close" onClick={() => setSelectedJob(null)}>&times;</span>
             <h2 id="job-Title">{selectedJob.Title}</h2>
-            <p id="job-description">Cyber security, Embedded systems.</p>
+            <p id="job-description">{selectedJob.description}</p>
           </div>
         </div>
       )}
 
       {showLoginModal && (
-        <div className="modal show" style={{ display: 'block' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-body">
-                <LoginRegistrationForm closeModal={handleCloseLoginModal} />
+        <div className="modal-show-1" style={{ display: 'block' }}>
+          <div className="modal-dialog-1">
+            <div className="modal-content-1">
+              <div className="modal-body-1">
+                <button className="close" onClick={() => setShowLoginModal(false)}>&times;</button>
+                <div className={`login form active`}>
+                  <header>LogIn</header>
+                  <form onSubmit={handleLogin}>
+                    <input type="text" name="username" placeholder="Username" value={loginData.username} onChange={handleLoginChange} />
+                    {loginErrors.username && <span className="error">{loginErrors.username}</span>}
+                    <div className="password-wrapper">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        name="password"
+                        placeholder="Enter your password"
+                        value={loginData.password}
+                        onChange={handleLoginChange}
+                      />
+                      <span className="password-toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                        <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                      </span>
+                    </div>
+                    {loginErrors.password && <span className="error">{loginErrors.password}</span>}
+                    {loginErrors.general && <span className="error">{loginErrors.general}</span>}
+                    <br />
+                    <a href="#">Forgot password?</a>
+                    <input type="submit" className="button" value="LogIn" />
+                    <div className="signup">
+                      <span className="signup">Don't have an account?
+                        <label htmlFor="check" onClick={() => setShowSignupPage(true)}>Signup</label>
+                      </span>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
       )}
+
+      {showSignupPage && (
+        <div className="modal-show-1" style={{ display: 'block' }}>
+          <div className="modal-dialog-1">
+            <div className="modal-content-1">
+              <div className="modal-body-1">
+                <button className="close" onClick={() => setShowSignupPage(false)}>&times;</button>
+                <div className={`registration form active`}>
+                  <header>Signup</header>
+                  <form onSubmit={handleSignup}>
+                    <input type="text" name="first_name" placeholder="Enter your first name" value={signupData.first_name} onChange={handleSignupChange} />
+                    {signupErrors.first_name && <span className="error">{signupErrors.first_name}</span>}
+                    <input type="text" name="email" placeholder="Enter your email" value={signupData.email} onChange={handleSignupChange} />
+                    {signupErrors.email && <span className="error">{signupErrors.email}</span>}
+                    <input type="text" name="username" placeholder="Username" value={signupData.username} onChange={handleSignupChange} />
+                    {signupErrors.username && <span className="error">{signupErrors.username}</span>}
+                    <div className="password-wrapper">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        name="password"
+                        placeholder="Password"
+                        value={signupData.password}
+                        onChange={handleSignupChange}
+                      />
+                      <span className="password-toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                        <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                      </span>
+                    </div>
+                    {signupErrors.password && <span className="error">{signupErrors.password}</span>}
+                    {signupErrors.general && <span className="error">{signupErrors.general}</span>}
+                    <input type="submit" className="button" value="Signup" />
+                  </form>
+                  <div className="signup">
+                    <span className="signup">Already have an account?
+                      <label htmlFor="click" onClick={() => setShowSignupPage(false)}>Login</label>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showRegistrationForm && loggedInUser && (
+        <RegistrationForm closeModal={() => setShowRegistrationForm(false)} />
+      )}
+
+      <div className="pagination">
+        <button disabled={currentPage <= 1} className="btn" onClick={handlePrevClick}>Prev</button>
+        <span>{currentPage} of {totalPages}</span>
+        <button disabled={currentPage >= totalPages} className="btn" onClick={handleNextClick}>Next</button>
+      </div>
     </div>
   );
 };

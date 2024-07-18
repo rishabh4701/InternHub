@@ -24,6 +24,11 @@ body{
   cursor: pointer;
 }
 
+/* form validation */
+.error{
+  color: red;
+}
+/* form validation */
 .container{
   position: absolute;
   top: 50%;
@@ -35,6 +40,24 @@ body{
   border-radius: 7px;
   box-shadow: 0 5px 10px rgba(0,0,0,0.3);
 }
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 30px; /* Adjust this if needed */
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 0.875rem;
+  top: 1.01rem;
+  cursor: pointer;
+}
+
 .container .registration{
   display: none;
 }
@@ -62,7 +85,7 @@ body{
    width: 100%;
    padding: 0 15px;
    font-size: 17px;
-   margin-bottom: 1.3rem;
+   margin-bottom: 1rem;
    border: 1px solid rgb(0, 0, 0);
    border-radius: 6px;
    outline: none;

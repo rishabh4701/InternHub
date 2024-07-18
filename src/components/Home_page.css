@@ -1,3 +1,4 @@
+/* home_page */
 .popup {
     display: none;
     position: fixed;
@@ -11,17 +12,32 @@
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
-  
+ .popup :active{
+  display: block;
+ }
   .popup .close {
     position: absolute;
     top: 10px;
     right: 15px;
     font-size: 20px;
-
     cursor: pointer;
   }
   /* //////////////////////////// */
   
+  .navbar .logout{
+    left: 89%;
+    top: 20%;
+    position: absolute;
+    color: white;
+    background-color: blue;
+    cursor: pointer;
+    border: 1px solid orange;
+    border-radius: 5px;
+    padding: 5px;
+  }
+  .logout :hover{
+    background-color: orange;
+  }
   body {
     font-size: 16px;
     line-height: 1.5;
@@ -30,6 +46,33 @@
     display:block;
     padding-left: 80px;
     padding-right: 80px;
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+  }
+  
+  .pagination .btn {
+    border: none;
+    background-color: blue;
+    color: white;
+    padding: 5px;
+    border-radius: 10px;
+    margin: 0 10px;
+    cursor: pointer;
+    font-size: medium;
+  }
+
+  .pagination span {
+    margin: 0 10px;
+    font-size: 16px;
+    border-bottom: 4px solid orange;
+  }
+  
+  .username{
+    text-decoration: underline;
   }
   ul{
     list-style-type: none;
@@ -45,7 +88,24 @@
     float: right;
     margin-top: 9px;
     margin-right: 20px;
+    color: white;
    }
+
+   .user1{
+    position: absolute;
+    top: 19.7%;
+    left: 79%;
+    color: white;
+    border: 1px solid orange;
+    border-radius: 50%;
+    padding: 8px 18px;
+    /* background-color: orange; */
+    cursor: pointer;
+   }
+   .user-id-label {
+    font-weight: normal;
+    margin-right: 7px; }
+  
    .user img{
     width: 39px;
     height: 39px;
@@ -101,12 +161,12 @@
       text-decoration: none;
       padding: 5px;
       border-radius: 6px;
+      cursor: pointer;
     }
     .job-item .btn-primary:hover{
-      background-color: rgb(67, 67, 200);
+      background-color: orange;
   }
   .fa-user-alt:before {
-      /* content: "\f3c5"; */
       content:icon;
       color: black;
       padding: 5px;
@@ -148,4 +208,236 @@
     left: 50%;
     bottom: -5px;
   }
-  
+/* home_page */
+
+  /* login */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+body{
+  min-height: 100vh;
+  width: 100%;
+  background: white;
+}
+.close{
+  position: absolute;
+  left: 90%;
+  background-color: rgb(225, 225, 225);
+  color: black;
+  padding: 5px;
+  margin-top: 5px;
+  border: 0;
+  width: 18px;
+  height: 16px;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* form validation */
+.error{
+  color: red;
+}
+/* form validation */
+.modal-show-1{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  max-width: 430px;
+  width: 100%;
+  background: rgb(225, 225, 225);
+  border-radius: 7px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+  padding: 30px;
+}
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 30px; /* Adjust this if needed */
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 0.875rem;
+  top: 1.01rem;
+  cursor: pointer;
+}
+
+.model-show-1 .registration{
+  display: none;
+}
+#check:checked ~ .registration{
+  display: block;
+}
+#check:checked ~ .login{
+  display: none;
+}
+#check{
+  display: none;
+}
+.model-show-1 .form{
+  padding: 2rem;
+}
+.form header{
+  font-size: 2rem;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: black;
+}
+ .form input{
+   height: 60px;
+   width: 100%;
+   padding: 0 15px;
+   font-size: 17px;
+   margin-bottom: 1rem;
+   border: 1px solid rgb(0, 0, 0);
+   border-radius: 6px;
+   outline: none;
+ }
+ .form input:focus{
+   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+ }
+.form a{
+  font-size: 16px;
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+.form a:hover{
+  text-decoration: underline;
+}
+.form input.button{
+  color: rgb(0, 0, 0);
+  background: white;
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin-top: 1.7rem;
+  cursor: pointer;
+  transition: 0.4s;
+}
+.form input.button:hover{
+  background: rgb(234, 213, 213);
+}
+.signup{
+  font-size: 17px;
+  text-align: center;
+  color: rgb(0, 0, 0);
+}
+.signup label{
+  color: blue;
+  cursor: pointer;
+  padding-left: 5px;
+}
+.signup label:hover{
+  text-decoration: underline;
+}
+/* login */
+
+
+/* RegistrationForm.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+
+.close1{
+  right: 90%;
+}
+.model-show-1 {
+  max-width: 700px;
+  width: 100%;
+  background-color: #fff;
+  padding: 25px 30px;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.model-show-1 .title {
+  font-size: 25px;
+  font-weight: 500;
+  position: relative;
+}
+
+.model-show-1 .title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 30px;
+  border-radius: 5px;
+  background: blue;
+}
+
+.content form .user-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 0 12px 0;
+}
+
+form .user-details .input-box {
+  margin-bottom: 15px;
+  width: calc(100% / 2 - 20px);
+}
+
+form .input-box span.details {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+.user-details .input-box input {
+  height: 45px;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
+  border-radius: 5px;
+  padding-left: 15px;
+  border: 1px solid #ccc;
+  border-bottom-width: 2px;
+  transition: all 0.3s ease;
+}
+
+form .category {
+  display: flex;
+  width: 80%;
+  margin: 14px 0;
+  justify-content: space-between;
+}
+
+
+form .button {
+  height: 45px;
+  margin: 35px 0;
+}
+
+form .button input {
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: blue;
+}
+
+form .button input:hover {
+  background: rgb(60, 60, 222);
+}
+
+ /* registration */
