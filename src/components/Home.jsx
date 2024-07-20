@@ -63,12 +63,21 @@ const Home = () => {
     e.preventDefault();
     const errors = validateLogin();
     setLoginErrors(errors);
+    
     if (Object.keys(errors).length === 0) {
       axios.post('http://127.0.0.1:8000/auth/login/', loginData)
         .then(response => {
-          setLoggedInUser(response.data.user_id);
-          setShowLoginModal(false);
-          //setShowRegistrationForm(true); // Show registration form after login
+          if (response.data.status === 'staff') {
+            // If user is staff, redirect to /mentor
+            alert("Log in as mentor");
+            // history.push('/mentor'); // Assuming 'history' is available from React Router
+            history.push(`/mentor/${response.data.user_id}`);
+          } else {
+            // Otherwise, handle regular user login
+            setLoggedInUser(response.data.user_id);
+            setShowLoginModal(false);
+            //setShowRegistrationForm(true); // Show registration form after login if needed
+          }
         })
         .catch(error => {
           if (error.response && error.response.data) {
@@ -79,6 +88,7 @@ const Home = () => {
         });
     }
   };
+  
 
   const handleSignup = (e) => {
     e.preventDefault();
