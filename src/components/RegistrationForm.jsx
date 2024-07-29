@@ -33,6 +33,7 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
 
   const courses = ['B.Tech', 'M.Tech'];
   const year_of_study = ['1', '2', '3', '4'];
+ 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -124,7 +125,7 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
         <form onSubmit={handleSubmit}>
           <div className="user-details">
             <div className="input-box">
-              <span className="details">First Name</span>
+              <span className="details">First Name &#42;</span>
               <input
                 type="text"
                 name="first_name"
@@ -135,7 +136,7 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
               />
             </div>
             <div className="input-box">
-              <span className="details">Last Name</span>
+              <span className="details">Last Name &#42;</span>
               <input
                 type="text"
                 name="last_name"
@@ -146,7 +147,7 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
               />
             </div>
             <div className="input-box">
-              <span className="details">Address</span>
+              <span className="details">Address &#42;</span>
               <input
                 type="text"
                 name="adddress"
@@ -157,7 +158,7 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
               />
             </div>
             <div className="input-box">
-              <span className="details">Email</span>
+              <span className="details">Email &#42;</span>
               <input
                 type="text"
                 name="email"
@@ -169,7 +170,7 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
             </div>
             
             <div className="input-box">
-              <span className="details">Phone Number</span>
+              <span className="details">Phone Number &#42;</span>
               <input
                 type="text"
                 name="phone_number"
@@ -181,7 +182,7 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
             </div>
           
             <div className="input-box">
-              <span className="details">College Name</span>
+              <span className="details">College Name &#42;</span>
               <input
                 type="text"
                 name="college_name"
@@ -192,21 +193,22 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
               />
             </div>
             <div className="input-box">
-              <span className="details">Course</span>
+              <span className="details">Course &#42;</span>
               <select
                 name="course"
                 value={formData.course}
                 onChange={handleChange}
                 required
               >
-                <option value="" disabled>Select Course</option>
+                <option value="" disabled>Select Course </option>
                 {courses.map((course, index) => (
                   <option key={index} value={course}>{course}</option>
                 ))}
               </select>
+
             </div>
             <div className="input-box">
-              <span className="details">Department</span>
+              <span className="details">Department (If other please specify ) &#42;</span>
               <select
                 name="department"
                 value={formData.department}
@@ -220,7 +222,7 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
               </select>
               {formData.department === 'Other' && (
                 <div className="input-box">
-                  <span className="details">Other Department</span>
+                  <span className="details">Other Department &#42;</span>
                   <input
                     type="text"
                     name="custom_department"
@@ -233,7 +235,7 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
               )}
             </div>
             <div className="input-box">
-              <span className="details">Roll Number</span>
+              <span className="details">Roll Number &#42;</span>
               <input
                 type="text"
                 name="roll_no"
@@ -244,7 +246,7 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
               />
             </div>
             <div className="input-box">
-              <span className="details">Year of Study</span>
+              <span className="details">Year of Study &#42;</span>
               <select
                 name="year_of_study"
                 value={formData.year_of_study}
@@ -258,7 +260,7 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
               </select>
             </div>
             <div className="input-box">
-              <span className="details">Upload Resume (PDF only, max 10MB)</span>
+              <span className="details">Upload Resume (PDF only, max 10MB) &#42;</span>
               <input
                 type="file"
                 accept="application/pdf"
