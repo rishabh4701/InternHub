@@ -7,24 +7,27 @@ import './Home_page.css';
 import logo from './images/Mnit_logo.png';
 import userIcon from './images/icons8-user-50.png';
 import RegistrationForm from './RegistrationForm';
+import Application_status from './Application_status';
 
 const Home = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobs, setJobs] = useState([]);
-  const [showLoginModal, setShowLoginModal] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [showSignupPage, setShowSignupPage] = useState(false);
-  const [resumeUploaded, setResumeUploaded] = useState(false);
+ // const [resumeUploaded, setResumeUploaded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showRegistrationForm, setShowRegistrationForm] = useState(false); // Changed default to false
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const jobsPerPage = 5;
-
+  const [showMyApplication, setShowMyApplication] = useState(false);
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [signupData, setSignupData] = useState({ first_name: '', email: '', username: '', password: '' });
   const [loginErrors, setLoginErrors] = useState({});
   const [signupErrors, setSignupErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-
+  const [i_id, seti_id] = useState(null);
+  const loggedIn = window.localStorage.getItem("isLoggedIn");
+  console.log(loggedIn, "login");
   const history = useHistory();
 
   useEffect(() => {
@@ -67,6 +70,9 @@ const Home = () => {
     if (Object.keys(errors).length === 0) {
       axios.post('http://127.0.0.1:8000/auth/login/', loginData)
         .then(response => {
+          setLoggedInUser(response.data.user_id);
+          setShowLoginModal(false);
+          window.localStorage.setItem("isLoggedIn", true);
           if (response.data.status === 'staff') {
             // If user is staff, redirect to /mentor
             alert("Log in as mentor");
@@ -113,20 +119,34 @@ const Home = () => {
 
   const handleLogout = () => {
     setLoggedInUser(null);
-  };
+    window.localStorage.setItem("isLoggedIn", false);
+    setShowMyApplication(false);
+    setShowRegistrationForm(false);
+    history.push('/');  };
 
-  const handleResumeUpload = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type === 'application/pdf') {
-      setResumeUploaded(true);
-    } else {
-      alert('Please upload a PDF file.');
-    }
-  };
 
-  const handleApplyNowClick = () => {
+  const handleMyApplication = () => {
+    setShowMyApplication(true);
+    setShowRegistrationForm(false);
+  };
+  
+  const handleHome = () => {
+    setShowMyApplication(false);
+    setShowRegistrationForm(false);
+  }
+ // const handleResumeUpload = (e) => {
+  //  const file = e.target.files[0];
+  //   if (file && file.type === 'application/pdf') {
+  //     setResumeUploaded(true);
+  //   } else {
+  //     alert('Please upload a PDF file.');
+  //   }
+  // };
+
+  const handleApplyNowClick = (jobId) => {
     if (loggedInUser) {
       setShowRegistrationForm(true);
+      seti_id(jobId);
     } else {
       setShowLoginModal(true);
     }
@@ -160,14 +180,16 @@ const Home = () => {
 
       <nav className="navbar">
         <ul>
-          <li><a className="home" href="#">Home</a></li>
+          <li><a className="home" onClick={handleHome}>Home</a></li>
           <li><a className="about" href="#">About</a></li>
           <li><a className="contact" href="#">Contact</a></li>
-          <li><a className="myapplication" href="#">My Applications</a></li>
+          
           {loggedInUser ? (
             <>
+              <li><a className="myapplication" onClick={handleMyApplication}>My Applications</a></li>
               <li className="user1">
-              <span className="user-id-label">User_id :</span>{loggedInUser}</li>
+                <span className="user-id-label">User_id :</span>{loggedInUser}
+              </li>
               <li className="logout" onClick={handleLogout}>Logout</li>
             </>
           ) : (
@@ -178,7 +200,7 @@ const Home = () => {
         </ul>
       </nav>
 
-      {!showRegistrationForm && (
+      {!showRegistrationForm && !showMyApplication && (
         <div className="tab-content">
           <div id="tab-1" className="tab-pane fade show p-0 active">
             {currentJobs.map((job, index) => (
@@ -194,7 +216,7 @@ const Home = () => {
                   </div>
                   <div className="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                     <div className="d-flex">
-                      <button className="btn btn-primary" onClick={handleApplyNowClick}>Apply Now</button>
+                      <button className="btn btn-primary" onClick={() => handleApplyNowClick(job.id)}>Apply Now</button>
                     </div>
                     <small className="text-truncate">
                       <FontAwesomeIcon icon={faCalendarAlt} className="text-primary me-2" /> Duration: {job.Duration}
@@ -217,7 +239,7 @@ const Home = () => {
         </div>
       )}
 
-      {showLoginModal && (
+      {showLoginModal && !loggedInUser && (
         <div className="modal-show-1" style={{ display: 'block' }}>
           <div className="modal-dialog-1">
             <div className="modal-content-1">
@@ -258,7 +280,7 @@ const Home = () => {
         </div>
       )}
 
-      {showSignupPage && (
+      {showSignupPage && !loggedInUser && (
         <div className="modal-show-1" style={{ display: 'block' }}>
           <div className="modal-dialog-1">
             <div className="modal-content-1">
@@ -302,14 +324,24 @@ const Home = () => {
       )}
 
       {showRegistrationForm && loggedInUser && (
-        <RegistrationForm closeModal={() => setShowRegistrationForm(false)} />
+        <RegistrationForm closeModal={() => setShowRegistrationForm(false)} 
+        userId={loggedInUser}
+        iId={i_id}
+        />
+        
       )}
+      
 
+      {showMyApplication && loggedInUser && (
+         <Application_status  />
+      )}
+      
       <div className="pagination">
         <button disabled={currentPage <= 1} className="btn" onClick={handlePrevClick}>Prev</button>
         <span>{currentPage} of {totalPages}</span>
         <button disabled={currentPage >= totalPages} className="btn" onClick={handleNextClick}>Next</button>
       </div>
+      
     </div>
   );
 };
