@@ -71,7 +71,7 @@ const Home = () => {
             // If user is staff, redirect to /mentor
             alert("Log in as mentor");
             // history.push('/mentor'); // Assuming 'history' is available from React Router
-            history.push(`/mentor/${response.data.user_id}`);
+            history.push(`/mentor/${response.data.user_id}/${response.data.username}`);
           } else {
             // Otherwise, handle regular user login
             setLoggedInUser(response.data.user_id);

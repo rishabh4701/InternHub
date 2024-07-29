@@ -18,7 +18,7 @@ function App() {
           <Route path="/login" component={LoginRegistrationForm} />
           <Route path="/dashboard" component={Dashboard} />
           {/* <Route path="/mentor" render={(props) => <InternshipsPage userId={userId} />} /> */}
-          <Route path="/mentor/:userId" component={MentorPage} />
+          <Route path="/mentor/:userId/:username" component={MentorPage} />
         </Switch>
       </div>
     </Router>

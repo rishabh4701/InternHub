@@ -1,0 +1,291 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+.close1 {
+  float: right;
+  position: absolute;
+  top: 33%;
+  left: 90%;
+  cursor: pointer;
+  font-size: 40px;
+  color: black;
+  border: none;
+}
+
+.jobitem {
+  position: relative;
+  /* background: #f9f9f9; */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 20px;
+  margin-top: 20px;
+  border-bottom: 10px solid orange;
+}
+
+.jobitem h2 {
+  margin: 0 0 10px;
+  font-size: 1.5em;
+  position: relative;
+}
+
+.jobitem h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  height: 3px;
+  width: 4%;
+  border-radius: 5px;
+  background: blue;
+}
+
+.jobitem p {
+  margin: 0 0 10px;
+}
+
+.jobitem .status {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  font-weight: bold;
+  font-size:medium;
+}
+
+.jobitem .buttons {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.jobitem .button {
+  margin-top: 5px;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.jobitem .button:hover {
+  background-color: #0056b3;
+}
+
+.jobitem .details {
+  display: flex;
+  flex-direction: column;
+}
+
+.applications {
+  margin-top: 20px;
+}
+
+.applications h3 {
+  margin: 0 0 10px;
+}
+
+.applications p {
+  margin: 0 0 5px;
+}
+
+.add-internship-container {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.add-internship-button {
+  padding: 10px 20px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.add-internship-button:hover {
+  background-color: rgb(60, 60, 222);
+}
+
+.internships-container {
+  position: relative;
+}
+
+.edit-form-container {
+    display: flex;
+    flex-direction: column;
+    /* margin: 20px auto; */
+    /* max-width: 700px; */
+    width: 100%;
+    padding: 25px 30px;
+    background: #fff;
+    border: 1px solid black;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.add-form-container{
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto;
+    max-width: 700px;
+    width: 100%;
+    padding: 25px 30px;
+    background: #fff;
+    border: 1px solid black;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    position: absolute;
+    top: 20px; /* Adjust this value as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.add-form-container h3,
+.edit-form-container h3 {
+  margin: 0 0 10px;
+  font-size: 25px;
+  font-weight: 500;
+  position: relative;
+}
+
+.add-form-container h3::before,
+.edit-form-container h3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 30px;
+  border-radius: 5px;
+  background: blue;
+}
+
+.add-form-container form,
+.edit-form-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-form-container input,
+.add-form-container textarea,
+.add-form-container select{
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.edit-form-container input,
+.edit-form-container textarea,
+.edit-form-container select {
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width:min-content
+}
+
+.add-form-container .form-buttons,
+.edit-form-container .form-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.add-form-container .form-buttons button,
+.edit-form-container .form-buttons button {
+  margin-left: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-form-container .form-buttons .save-button,
+.edit-form-container .form-buttons .save-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.add-form-container .form-buttons .save-button:hover,
+.edit-form-container .form-buttons .save-button:hover {
+  background-color: #0056b3;
+}
+
+.add-form-container .form-buttons .cancel-button,
+.edit-form-container .form-buttons .cancel-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.add-form-container .form-buttons .cancel-button:hover,
+.edit-form-container .form-buttons .cancel-button:hover {
+  background-color: #c82333;
+}
+
+.internships-list {
+  margin-top: 40px;
+}
+
+.internships-list.blurred {
+  filter: blur(5px);
+  pointer-events: none;
+}
+
+@media (max-width: 584px) {
+  .add-form-container,
+  .edit-form-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 459px) {
+  .add-form-container .form-buttons,
+  .edit-form-container .form-buttons {
+    flex-direction: column;
+  }
+
+  .add-form-container .form-buttons button,
+  .edit-form-container .form-buttons button {
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+}
+
+.username-display {
+    position: absolute;
+    right: 160px;
+    font-size: 18px;
+    color: white;
+    background-color:blue;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+.navbar2{
+    display: flex;
+}
+
+.logout-button {
+    position: absolute;
+    right: 45px;
+    font-size: 18px;
+    padding: 10px;
+    background-color: #ff4b4b;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+  }
+  
+  .logout-button:hover {
+    background-color: #ff7878;
+  }
+  
+  .header{
+    margin-top: 20px;
+  }
