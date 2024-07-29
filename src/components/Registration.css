@@ -51,11 +51,7 @@ p {
   justify-content: space-between;
   margin: 20px 0 12px 0;
 }
-.details ::before{
-  content: '*';
-  color: red;
-  float: right;
-}
+
 form .user-details .input-box {
   margin-bottom: 15px;
   width: calc(100% / 2 - 20px);
@@ -67,7 +63,11 @@ form .input-box span.details {
   margin-bottom: 5px;
   margin-top: 10px;
 }
-
+/* span::after{
+  content: '*';
+  color: red;
+  float: right;
+} */
 .user-details .input-box input {
   height: 45px;
   width: 100%;

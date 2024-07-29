@@ -50,6 +50,10 @@ const Home = () => {
     const errors = {};
     if (!loginData.username) errors.username = 'Username is required';
     if (!loginData.password) errors.password = 'Password is required';
+    if (!loginData.password && !loginData.username){
+      errors.password = 'Invalid username or password';
+      errors.username = 'Invalid username or password';
+    }
     return errors;
   };
 
