@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import './Mentor.css';
 import logo from './images/Mnit_logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,8 +13,7 @@ const MentorPage = (props) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [applications, setApplications] = useState({});
   const [viewingApplicationsId, setViewingApplicationsId] = useState(null);
-  const userId = props.match.params.userId;
-  const username = props.match.params.username;
+  const { userId, username } = useParams(); // Destructure params from useParams hook
   const history = useHistory();
   console.log(username);
 
@@ -276,7 +275,7 @@ const MentorPage = (props) => {
       </button>
         </div>
         {filteredInternships.map(internship => (
-  <div className="jobitem p-4 mb-4" key={internship.id}>
+  <div className="mentoritem p-4 mb-4" key={internship.id}>
     {editingInternshipId === internship.id ? (
       <EditForm
         internship={internship}

@@ -11,7 +11,7 @@
   border: none;
 }
 
-.jobitem {
+.mentoritem {
   position: relative;
   /* background: #f9f9f9; */
   border: 1px solid #ddd;
@@ -21,13 +21,13 @@
   border-bottom: 10px solid orange;
 }
 
-.jobitem h2 {
+.mentoritem h2 {
   margin: 0 0 10px;
   font-size: 1.5em;
   position: relative;
 }
 
-.jobitem h2::after {
+.mentoritem h2::after {
   content: "";
   position: absolute;
   left: 0;
@@ -38,11 +38,11 @@
   background: blue;
 }
 
-.jobitem p {
+.mentoritem p {
   margin: 0 0 10px;
 }
 
-.jobitem .status {
+.mentoritem .status {
   position: absolute;
   top: 20px;
   right: 15px;
@@ -50,7 +50,7 @@
   font-size:medium;
 }
 
-.jobitem .buttons {
+.mentoritem .buttons {
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -59,7 +59,7 @@
   align-items: flex-end;
 }
 
-.jobitem .button {
+.mentoritem .button {
   margin-top: 5px;
   padding: 8px 12px;
   background-color: #007bff;
@@ -69,11 +69,11 @@
   cursor: pointer;
 }
 
-.jobitem .button:hover {
+.mentoritem .button:hover {
   background-color: #0056b3;
 }
 
-.jobitem .details {
+.mentoritem .details {
   display: flex;
   flex-direction: column;
 }
