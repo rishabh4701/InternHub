@@ -6,11 +6,11 @@ import Home from './components/Home';  // Assume Home is another component you w
 import Dashboard from './components/Dashboard';  // Another component, e.g., for logged-in users
 import InternshipsPage from './components/Mentor';
 import Application_status from './components/Application_status';
+import MentorPage from './components/Mentor';
+
 
 function App() {
-  const userId = '2';
-  // const loggedIn = window.localStorage.getItem("isLoggedIn");
-
+  const userId = '1';
   return (
     
     <Router>
@@ -20,7 +20,9 @@ function App() {
           <Route path="/login" component={LoginRegistrationForm} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/mentor" render={(props) => <InternshipsPage userId={userId} />} />
-          <Route path="application_status" component={Application_status }></Route>
+          <Route path="application_status" component={Application_status } />
+          {/* <Route path="/mentor" render={(props) => <InternshipsPage userId={userId} />} /> */}
+          <Route path="/mentor/:userId" component={MentorPage} />
         </Switch>
       </div>
     </Router>

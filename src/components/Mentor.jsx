@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserAlt, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import './Home_page.css';
 
-const InternshipsPage = ({ userId }) => {
+const MentorPage = (props) => {
   const [internships, setInternships] = useState([]);
   const [filteredInternships, setFilteredInternships] = useState([]);
-
+  const [editingInternshipId, setEditingInternshipId] = useState(null);
+  const userId = props.match.params.userId;
+  console.log(userId);
   useEffect(() => {
     fetchInternships();
   }, []);
@@ -34,44 +33,112 @@ const InternshipsPage = ({ userId }) => {
     }
   };
 
+  const handleEdit = (internshipId) => {
+    setEditingInternshipId(internshipId);
+  };
+
+  const handleSave = async (updatedInternship) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/internships/${updatedInternship.id}/    `, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedInternship),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update internship');
+      }
+
+      // Update local state or fetch data again to reflect changes
+      fetchInternships();
+      setEditingInternshipId(null); // Clear editing state
+    } catch (error) {
+      console.error('Error updating internship:', error);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingInternshipId(null);
+  };
+
+  const EditForm = ({ internship, onSave, onCancel }) => {
+    const [updatedInternship, setUpdatedInternship] = useState(internship);
+  
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setUpdatedInternship(prevState => ({
+        ...prevState,
+        [name]: value,
+      }));
+    };
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      onSave(updatedInternship);
+    };
+  
+    return (
+      <form onSubmit={handleSubmit}>
+        <label>Title:</label>
+        <input
+          type="text"
+          name="Title"
+          value={updatedInternship.Title}
+          onChange={handleChange}
+        />
+        <label>Mentor:</label>
+        <input
+          type="text"
+          name="Mentor"
+          value={updatedInternship.Mentor}
+          onChange={handleChange}
+        />
+        <label>Duration:</label>
+        <input
+          type="text"
+          name="Duration"
+          value={updatedInternship.Duration}
+          onChange={handleChange}
+        />
+        <label>Status:</label>
+        <input
+          type="text"
+          name="Status"
+          value={updatedInternship.Status}
+          onChange={handleChange}
+        />
+        <button type="submit">Save</button>
+        <button type="button" onClick={onCancel}>Cancel</button>
+      </form>
+    );
+  };
+  
   return (
     <div>
       <h1>Internships</h1>
-      <div className="tab-content">
-        <div id="tab-1" className="tab-pane fade show p-0 active">
         {filteredInternships.map(internship => (
-          <div className="job-item p-4 mb-4">
-          <div className="row g-4">
-            <div className="col-sm-12 col-md-8 d-flex flex-row align-items-start align-items-md-end justify-content-center">
-              <div className="text-start ps-4" id='internships'>
-                <h2 className="mb-3">{internship.Title}</h2>
-                <div className="d-flex">
-                  <span className="badge bg-secondary">{internship.Status}</span>
-                </div>
-                <span className="text-truncate me-3">
-                  <FontAwesomeIcon icon={faUserAlt} className="text-primary me-2" />
-                  {internship.Mentor}
-                </span>
-              </div>
-            </div>
-            <div className="col-sm-12 col-md-4 d-flex flex-row align-items-start align-items-md-end justify-content-center">
-              <div className="d-flex">
-                <a className="btn btn-primary" href="#">Edit</a>
-              </div>
-              <small className="text-truncate">
-                <FontAwesomeIcon icon={faCalendarAlt} className="text-primary me-2" />
-                Duration: {internship.Duration}
-              </small>
-            </div>
-            
+          <div className="job-item p-4 mb-4" key={internship.id}>
+            {editingInternshipId === internship.id ? (
+              <EditForm
+                internship={internship}
+                onSave={handleSave}
+                onCancel={handleCancelEdit}
+              />
+            ) : (
+              <>
+                <h2>{internship.Title}</h2>
+                <p>Mentor: {internship.Mentor}</p>
+                <p>Duration: {internship.Duration}</p>
+                <p>Status: {internship.Status}</p>
+                <button onClick={() => handleEdit(internship.id)}>Edit</button>
+              </>
+            )}
           </div>
-        </div>
-         
         ))}
-      </div>
-    </div>
     </div>
   );
 };
 
-export default InternshipsPage;
+export default MentorPage;
