@@ -32,7 +32,7 @@
   
   .navbar .logout{
     left: 89%;
-    top: 20%;
+    top: 22.5%;
     position: absolute;
     color: white;
     background-color: blue;
@@ -41,9 +41,13 @@
     border-radius: 5px;
     padding: 5px;
   }
-  .logout :hover{
-    background-color: orange;
-  }
+  
+  .search_bar {
+    position: absolute;
+    
+    top: 23%;
+    left: 60%;
+}
   body {
     font-size: 16px;
     line-height: 1.5;
@@ -100,7 +104,7 @@
 
    .user1{
     position: absolute;
-    top: 19.7%;
+    top: 22.5%;
     left: 79%;
     color: white;
     border: 1px solid orange;

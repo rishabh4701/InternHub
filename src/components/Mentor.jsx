@@ -11,12 +11,10 @@ const MentorPage = (props) => {
   const [filteredInternships, setFilteredInternships] = useState([]);
   const [editingInternshipId, setEditingInternshipId] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [applications, setApplications] = useState({});
-  const [viewingApplicationsId, setViewingApplicationsId] = useState(null);
-  const { userId, username } = useParams(); // Destructure params from useParams hook
+  const { userId, username, i_id } = useParams(); // Destructure params from useParams hook
   const history = useHistory();
   console.log(username);
-
+  console.log(i_id);
   useEffect(() => {
     fetchInternships();
   }, []);
@@ -44,16 +42,6 @@ const MentorPage = (props) => {
     }
   };
 
-  const handleViewApplications = async (id) => {
-    setViewingApplicationsId(id);
-    try {
-      const response = await fetch(`/api/applications?internshipId=${id}`);
-      const data = await response.json();
-      setApplications((prev) => ({ ...prev, [id]: data }));
-    } catch (error) {
-      console.error("Failed to fetch applications", error);
-    }
-  };
 
   const handleEdit = (internshipId) => {
     setEditingInternshipId(internshipId);
@@ -148,6 +136,10 @@ const MentorPage = (props) => {
     history.push('');
   };
 
+  const navigateToApplicationsPage = (id) => {
+    history.push(`/applications/${id}`);
+  };
+
   const handleAdd = async (newInternship) => {
     try {
       const response = await fetch('http://127.0.0.1:8000/internships/', {
@@ -193,6 +185,7 @@ const MentorPage = (props) => {
       onSave(newInternship);
     };
 
+    
     return (
       <form className="add-form-container" onSubmit={handleSubmit}>
         <h3>Add New Internship</h3>
@@ -292,20 +285,8 @@ const MentorPage = (props) => {
         </div>
         <div className="buttons">
           <button className="button" onClick={() => handleEdit(internship.id)}>Edit</button>
-          <button className="button" onClick={() => handleViewApplications(internship.id)}>View Applications</button>
+          <button className="button" onClick={() => navigateToApplicationsPage(internship.id)}>View Applications</button>
         </div>
-        {viewingApplicationsId === internship.id && applications[internship.id] && (
-          <div className="applications">
-            <h3>Applications</h3>
-            {applications[internship.id].map(application => (
-              <div key={application.id}>
-                <p>Name: {application.name}</p>
-                <p>Email: {application.email}</p>
-                <p>Resume: <a href={application.resumeLink} target="_blank" rel="noopener noreferrer">View</a></p>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </>
             )}
           </div>
