@@ -84,12 +84,32 @@
 
 .applications h3 {
   margin: 0 0 10px;
+  text-decoration: underline black;
 }
 
 .applications p {
   margin: 0 0 5px;
 }
-
+.applications a {
+  border-radius: 5px;
+  font-size:smaller;
+  color: white;
+  background-color: #007bff;
+  cursor: pointer;
+  padding: 5px;
+  border: 1px solid ;
+  text-decoration: none;
+}
+.applications a:hover{
+  background-color: #0056b3;
+}
+.apps{
+  margin: 5px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 5px;
+  border: 2px solid black;
+}
 .add-internship-container {
   margin: 20px 0;
   display: flex;
