@@ -10,7 +10,7 @@ import logo from './images/Mnit_logo.png';
 import userIcon from './images/icons8-user-50.png';
 import RegistrationForm from './RegistrationForm';
 import Application_status from './Application_status';
-
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 const Home = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobs, setJobs] = useState([]);
@@ -18,10 +18,10 @@ const Home = () => {
   const [loggedinUserId, setloggedinUserId] = useState(null);
   const [loggedInUser, setLoggedInUser] = useState();
   const [showSignupPage, setShowSignupPage] = useState(false);
- // const [resumeUploaded, setResumeUploaded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const jobsPerPage = 5;
+  const [search, setSearch] = useState('');
   const [showMyApplication, setShowMyApplication] = useState(false);
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [signupData, setSignupData] = useState({ first_name: '', email: '', username: '', password: '' });
@@ -29,6 +29,7 @@ const Home = () => {
   const [signupErrors, setSignupErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [i_id, seti_id] = useState(null);
+ 
   const loggedIn = window.localStorage.getItem("isLoggedIn");
   console.log(loggedIn, "login");
   console.log(loggedInUser);
@@ -65,11 +66,7 @@ const Home = () => {
     const errors = {};
     if (!signupData.first_name) errors.first_name = 'First name is required';
     if (!signupData.email) errors.email = 'Email is required';
-    if (!signupData.username) errors.username = 'Username is required';
-    if (!signupData.password) errors.password = 'Password is required';
-    return errors;
-  };
-
+  }
   const handleLogin = (e) => {
     e.preventDefault();
     const errors = validateLogin();
@@ -85,6 +82,7 @@ const Home = () => {
           if (response.data.status === 'staff') {
             // If user is staff, redirect to /mentor
             alert("Log in as mentor");
+            console.log(response.data);
             // history.push('/mentor'); // Assuming 'history' is available from React Router
             history.push(`/mentor/${response.data.user_id}/${response.data.username}`);
           } else {
@@ -176,7 +174,7 @@ const Home = () => {
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
   const totalPages = Math.ceil(jobs.length / jobsPerPage);
-
+console.log(search);
   return (
     <div>
       <header>
@@ -218,7 +216,7 @@ const Home = () => {
       {!showRegistrationForm && !showMyApplication && (
         <div className="tab-content">
           <div id="tab-1" className="tab-pane fade show p-0 active">
-            {currentJobs.map((job, index) => (
+            {currentJobs.filter((job)=> {return search.toLowerCase() === '' ? job : job.Title.toLowerCase().includes(search)}).map((job, index) => (
               <div key={index} className="job-item p-4 mb-4" onClick={() => setSelectedJob(job)}>
                 <div className="row g-4">
                   <div className="col-sm-12 col-md-8 d-flex align-items-center">
