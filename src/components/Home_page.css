@@ -29,25 +29,6 @@
     cursor: pointer;
   }
   /* //////////////////////////// */
-  
-  .navbar .logout{
-    left: 89%;
-    top: 22.5%;
-    position: absolute;
-    color: white;
-    background-color: blue;
-    cursor: pointer;
-    border: 1px solid orange;
-    border-radius: 5px;
-    padding: 5px;
-  }
-  
-  .search_bar {
-    position: absolute;
-    
-    top: 23%;
-    left: 60%;
-}
   body {
     font-size: 16px;
     line-height: 1.5;
@@ -85,64 +66,15 @@
   .username{
     text-decoration: underline;
   }
-  ul{
-    list-style-type: none;
-    overflow: hidden;
-    background-color: blue;
-    border-radius: 10px;
-  }
-  li{
-   float: left;
-  }
+  
   
    .user{
     float: right;
     margin-top: 9px;
     margin-right: 20px;
     color: white;
-   }
+  }
 
-   .user1{
-    position: absolute;
-    top: 22.5%;
-    left: 79%;
-    color: white;
-    border: 1px solid orange;
-    border-radius: 50%;
-    padding: 8px 18px;
-    /* background-color: orange; */
-    cursor: pointer;
-   }
-   .user-id-label {
-    font-weight: normal;
-    margin-right: 7px; }
-  
-   .user img{
-    width: 39px;
-    height: 39px;
-    overflow: hidden;
-    border-radius: 0%;
-    border: 0;
-    cursor: pointer;
-    visibility: visible;
-    padding: 0;
-   }
-  li a{
-    display: block;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    padding: 16px 14px;
-    cursor: pointer;
-  }
-  li:hover{
-    background-color: orange;
-  }
-  
-  .fa-user-circle:before{
-    color: white;
-    align-items: end;
-  }
   .MNIT_name{
     display: flex;
     justify-content: center;
@@ -455,3 +387,50 @@ form .button input:hover {
 }
 
  /* registration */
+
+ .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: blue;
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+}
+
+.navbar-left, .navbar-right {
+  display: flex;
+  list-style-type: none;
+}
+
+.navbar-left .home, .navbar-left .myapplication, .navbar-right .about, .navbar-right .contact, .navbar-right .logout {
+  color: white;
+  text-decoration: none;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.navbar-left .home:hover, .navbar-left .myapplication:hover, .navbar-right .about:hover, .navbar-right .contact:hover, .navbar-right .logout:hover {
+  color: #ddd;
+}
+
+.user1 {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.user-id-label {
+  margin-right: 5px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.user img {
+  width: 30px;
+  height: 30px;
+}

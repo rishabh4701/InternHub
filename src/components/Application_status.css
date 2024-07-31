@@ -1,26 +1,140 @@
-.ap{
-  padding: 10px;
-}
-
-.application-status {
+.application-status-container {
+  width: 80%;
+  margin: 15px auto;
   padding: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
-h1 {
+.application-status-container h1 {
   text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
   margin-bottom: 20px;
 }
 
-.application-list {
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
+thead th {
+  background-color:cornflowerblue;
+  color: white;
+  text-align: left;
+  padding: 12px;
 }
 
-.application-item {
-  background: white;
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tbody td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tbody tr:hover {
+  background-color: #ddd;
+}
+
+tbody td a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+
+tbody td a:hover {
+  text-decoration: underline;
+}
+
+/* #username{
+  position: absolute;
+  top: 169px;
+  right: 190px;
+  font-size: 18px;
+  color: white;
+  background-color:blue;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+#logout-button{
+  position: absolute;
+  top:168px;
+  right: 80px;
+  font-size: 18px;
+  padding: 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+} */
+
+.navbar3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: blue;
+  padding: 10px;
+  color: white;
+  width:100%;
+  border-radius: 10px;
+}
+
+.navbar-left .home {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-right .username {
+  margin-right: 20px;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.navbar-right .logout {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.navbar-right .logout:hover {
+  color: #ddd;
+}
+
+.details-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
   border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  padding: 15px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.details-card h2 {
+  margin-top: 0;
+}
+
+.details-card button {
+  background-color: #ff4b4b;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  margin-top: 10px;
 }

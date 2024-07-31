@@ -20,7 +20,7 @@ function App() {
           <Route path="/login" component={LoginRegistrationForm} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/mentor/:userId/:username" component={MentorPage} />
-          <Route path="application_status" component={Application_status } />
+          <Route path="/application_status/:userId/:username" component={Application_status } />
           {/* <Route path="/mentor" render={(props) => <InternshipsPage userId={userId} />} /> */}
           <Route path="/mentor/:userId/:username" component={MentorPage} />
           <Route path="/applications/:internshipId" component={ViewApplications} />

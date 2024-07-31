@@ -1,67 +1,142 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory, useParams, Link } from 'react-router-dom';
 import './Application_status.css';
-import axios from 'axios';
+import logo from './images/Mnit_logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserAlt, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faUser, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
-const Application_status = ({ loggedInUser }) => {
-  const [jobs, setJobs] = useState([]);
-  const [applications, setApplications] = useState([]);
-  const [status, setStatus] = useState('');
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8000/internships/')
-      .then(response => setJobs(response.data))
-      .catch(error => console.error('There was an error fetching the jobs!', error));
-  }, []);
+const ApplicationStatus = () => {
+  const [students, setStudents] = useState([]);
+  const [internshipDetails, setInternshipDetails] = useState([]);
+  const [selectedInternship, setSelectedInternship] = useState(null);
+  const { userId, username } = useParams();
+  const history = useHistory();
 
   useEffect(() => {
-    if (loggedInUser) {
-      axios.get(`http://127.0.0.1:8000/students/students/${loggedInUser}`)
-        .then(response => {
-          console.log('Response data:', response.data); // Log the response data
-          setApplications(response.data.applications || []);
-          setStatus(setApplications.status);
-        })
-        .catch(error => console.error('There was an error fetching the applications!', error));
+    fetchStudents();
+  }, [userId]);
+
+  const fetchStudents = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/students/students/');
+      if (!response.ok) {
+        throw new Error('Failed to fetch students data');
+      }
+      const data = await response.json();
+      const filteredStudents = data.filter(student => student.user_id === userId);
+      setStudents(filteredStudents);
+
+      const internshipPromises = filteredStudents.map(student =>
+        fetch(`http://127.0.0.1:8000/internships/${student.i_id}/`)
+          .then(res => {
+            if (!res.ok) {
+              throw new Error(`Failed to fetch internship ${student.i_id}`);
+            }
+            return res.json();
+          })
+          .catch(error => {
+            console.error('Error fetching internship:', error);
+            return null; // Return null if there's an error
+          })
+      );
+
+      const internshipsData = await Promise.all(internshipPromises);
+      const validInternships = internshipsData.filter(internship => internship !== null); // Filter out null values
+      // console.log(validInternships);
+      setInternshipDetails(validInternships);
+    } catch (error) {
+      console.error('Error fetching students data:', error);
     }
-  }, [loggedInUser]);
+  };
 
-  const getStatusForJob = (jobId) => {
-    const application = applications.find(app => app.i_id === jobId);
-    return application ? application.status : 'Not Applied';
+  const getInternshipDetails = (internshipId) => {
+    // console.log('Internship Details State:', internshipDetails);
+    const internship = internshipDetails.find(internship => internship.id === parseInt(internshipId));
+    // console.log('Internship ID:', internshipId, 'Matched Internship:', internship);
+    return internship ? { title: internship.Title, mentor: internship.Mentor, description: internship.Description } : { title: 'N/A', mentor: 'N/A', description: 'N/A' };
+  };
+
+  const handleLogout = () => {
+    history.push('/');
+  };
+
+  const handleShowDetails = (internshipId) => {
+    console.log(internshipId);
+    const internship = internshipDetails.find(internship => internship.id === parseInt(internshipId));
+    setSelectedInternship(internship);
+    console.log(selectedInternship);
+  };
+
+  const handleCloseDetails = () => {
+    setSelectedInternship(null);
   };
 
   return (
-    <div className='ap'>
-      <h1>MY Application</h1>
-      <div className="tab-content">
-        <div id="tab-1" className="tab-pane fade show p-0 active">
-          {jobs.map((job, index) => (
-            <div key={index} className="job-item p-4 mb-4">
-              <div className="row g-4">
-                <div className="col-sm-12 col-md-8 d-flex align-items-center">
-                  <div className="text-start ps-4">
-                    <h2 className="mb-3">{job.Title}</h2>
-                    <span className="text-truncate me-3">
-                      <FontAwesomeIcon icon={faUserAlt} className="text-primary me-2" /> {job.Mentor}
-                    </span>
-                  </div>
-                </div>
-                <div className="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
-                  <div className="d-flex mb-3">
-                    <span className="btn">{getStatusForJob(job.id)}</span>
-                  </div>
-                  <small className="text-truncate">
-                    <FontAwesomeIcon icon={faCalendarAlt} className="text-primary me-2" /> Duration: {job.Duration}
-                  </small>
-                </div>
-              </div>
-            </div>
-          ))}
+    <>
+      <header>
+        <div className="MNIT_name">
+          <img src={logo} alt="MNIT logo" />
+          <h1>
+            मालवीय राष्ट्रीय प्रौद्योगिकी संस्थान जयपुर (राष्ट्रीय महत्व का संस्थान)
+            <br />
+            Malaviya National Institute of Technology Jaipur (An Institute of National Importance)
+          </h1>
         </div>
+      </header>
+      <nav className="navbar3">
+        <div className="navbar-left">
+          <Link className="home" to="/">Home</Link>
+        </div>
+        <div className="navbar-right">
+          <span className="username"><FontAwesomeIcon icon={faUser} /> {username}</span>
+          <button className="logout" onClick={handleLogout}>
+            <FontAwesomeIcon icon={faSignOutAlt} />
+            Logout
+          </button>
+        </div>
+      </nav>
+      <div className="application-status-container">
+        <h1>My Applications</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Internship Title</th>
+              <th>Mentor Name</th>
+              <th>Status</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {students.map(student => {
+              const { title, mentor, description } = getInternshipDetails(student.i_id);
+              return (
+                <tr key={student.id}>
+                  <td>{title}</td>
+                  <td>{mentor}</td>
+                  <td>{student.status}</td>
+                  <td>
+                    <FontAwesomeIcon icon={faInfoCircle} onClick={() => handleShowDetails(student.i_id)} />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        {selectedInternship && (
+          <div className="details-card">
+            <h2>Internship Details</h2>
+            <p><strong>Title:</strong> {selectedInternship.Title}</p>
+            <p><strong>Mentor:</strong> {selectedInternship.Mentor}</p>
+            <p><strong>Description:</strong> {selectedInternship.Description}</p>
+            <p><strong>Duration:</strong> {selectedInternship.Duration}</p>
+            <p><strong>Stipend:</strong> {selectedInternship.Stipend}</p>
+            <p><strong>Internship Status:</strong> {selectedInternship.Status}</p>
+            <button onClick={handleCloseDetails}>Close</button>
+          </div>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 
-export default Application_status;
+export default ApplicationStatus;

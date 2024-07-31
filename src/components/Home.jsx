@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserAlt, faCalendarAlt, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faUserAlt, faCalendarAlt, faEye, faEyeSlash, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+
 import './Home_page.css';
 import logo from './images/Mnit_logo.png';
 import userIcon from './images/icons8-user-50.png';
@@ -13,7 +15,8 @@ const Home = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loggedinUserId, setloggedinUserId] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState();
   const [showSignupPage, setShowSignupPage] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
@@ -29,6 +32,7 @@ const Home = () => {
  
   const loggedIn = window.localStorage.getItem("isLoggedIn");
   console.log(loggedIn, "login");
+  console.log(loggedInUser);
   const history = useHistory();
 
   useEffect(() => {
@@ -71,7 +75,8 @@ const Home = () => {
     if (Object.keys(errors).length === 0) {
       axios.post('http://127.0.0.1:8000/auth/login/', loginData)
         .then(response => {
-          setLoggedInUser(response.data.user_id);
+          setLoggedInUser(response.data.username);
+          setloggedinUserId(response.data.user_id);
           setShowLoginModal(false);
           window.localStorage.setItem("isLoggedIn", true);
           if (response.data.status === 'staff') {
@@ -82,7 +87,8 @@ const Home = () => {
             history.push(`/mentor/${response.data.user_id}/${response.data.username}`);
           } else {
             // Otherwise, handle regular user login
-            setLoggedInUser(response.data.user_id);
+            setLoggedInUser(response.data.username);
+            setloggedinUserId(response.data.user_id);
             setShowLoginModal(false);
             //setShowRegistrationForm(true); // Show registration form after login if needed
           }
@@ -130,6 +136,8 @@ const Home = () => {
   const handleMyApplication = () => {
     setShowMyApplication(true);
     setShowRegistrationForm(false);
+    // history.push('/application_status/{loggedInUser}');
+    history.push(`/application_status/${loggedinUserId}/${loggedInUser}`);
   };
   
   const handleHome = () => {
@@ -180,34 +188,30 @@ console.log(search);
         </div>
       </header>
 
-      <nav className="navbar ">
-        <ul>
-          <li><a className="home" onClick={handleHome}>Home</a></li>
-          <li><a className="about" href="#">About</a></li>
-          <li><a className="contact" href="#">Contact</a></li>
-         <li> <div className="search_bar">
-          <form className="search" role="search">
-          <input className="form-control me-2" type="search" onChange={(e) => setSearch(e.target.value)} placeholder="Search" aria-label="Search" />
-          <button className="btn btn-outline-success" type="submit">Search</button>
-          </form>
-        </div>
+      <nav className="navbar">
+      <ul className="navbar-left">
+        <li><Link className="home" to="/" onClick={handleHome}>Home</Link></li>
+        {loggedInUser && (
+          <li><Link className="myapplication" to="#" onClick={handleMyApplication}>My Applications</Link></li>
+        )}
+      </ul>
+      <ul className="navbar-right">
         
-        </li>
-          {loggedInUser ? (
-            <>
-              <li><a className="myapplication" onClick={handleMyApplication}>My Applications</a></li>
-              <li className="user1">
-                <span className="user-id-label">UserID: </span>{loggedInUser}
-              </li>
-              <li className="logout" onClick={handleLogout}><FontAwesomeIcon icon={faSignOutAlt} /> Logout</li>
-            </>
-          ) : (
-            <div className="user" onClick={() => setShowLoginModal(true)}>
-              <img src={userIcon} alt="login" />
-            </div>
-          )}
-        </ul>
-      </nav>
+        {loggedInUser ? (
+          <>
+            <li className="user1">
+              <span className="user-id-label"><FontAwesomeIcon icon={faUser} /></span> {loggedInUser}
+            </li>
+            <li className="logout" onClick={handleLogout}><FontAwesomeIcon icon={faSignOutAlt} /> Logout</li>
+          </>
+        ) : (
+          <li className="user" onClick={() => setShowLoginModal(true)}>
+            <img src={userIcon} alt="login" />
+          </li>
+        )}
+      </ul>
+    </nav>
+      
 
       {!showRegistrationForm && !showMyApplication && (
         <div className="tab-content">
