@@ -23,7 +23,7 @@ function App() {
           <Route path="/application_status/:userId/:username" component={Application_status } />
           {/* <Route path="/mentor" render={(props) => <InternshipsPage userId={userId} />} /> */}
           <Route path="/mentor/:userId/:username" component={MentorPage} />
-          <Route path="/applications/:internshipId" component={ViewApplications} />
+          <Route path="/applications/:username/:internshipId" component={ViewApplications} />
         </Switch>
       </div>
     </Router>
