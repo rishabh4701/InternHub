@@ -4,7 +4,12 @@
   width: 100%;
   cursor: pointer;
 }
-
+input.search-box {
+  margin-left: 10px;
+  padding: 5px;
+  border: none;
+  border-radius: 2px;
+}
 .popup {
     display: none;
     position: fixed;

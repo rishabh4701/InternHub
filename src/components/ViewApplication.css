@@ -81,3 +81,33 @@ table {
   cursor: pointer;
   display: inline-block; /* Ensures button stays inline */
 }
+
+.colomn {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 10px;
+}
+button.colomn-1, button.colomn-2, button.colomn-3 {
+  width: 100%;
+  padding: 12px;
+  cursor: pointer;
+}
+.colomn button {
+  padding: 10px;
+  border: none;
+  background-color: #cac8c8;
+  cursor: pointer;
+  margin: 2px;
+  font-size: medium;
+}
+
+.colomn button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.colomn button:hover {
+  background-color: #0056b3;
+  color: white;
+}

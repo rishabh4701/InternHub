@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory, Link } from 'react-router-dom';
 import './ViewApplication.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import logo from './images/Mnit_logo.png';
 
 const ViewApplicationsPage = () => {
-  const { internshipId } = useParams();
+  const { internshipId, username } = useParams();
   const [applications, setApplications] = useState([]);
+  const [filteredApplications, setFilteredApplications] = useState([]);
   const [editingStatus, setEditingStatus] = useState(null);
   const [newStatus, setNewStatus] = useState("");
+  const [filter, setFilter] = useState("all");
+
+  const history = useHistory();
 
   const fetchApplications = async () => {
     try {
@@ -16,7 +23,8 @@ const ViewApplicationsPage = () => {
       }
       const data = await response.json();
       const filteredApps = data.filter(application => String(application.i_id) === String(internshipId));
-      setApplications(filteredApps.sort((a, b) => a.id - b.id)); // Sort by ID in ascending order
+      setApplications(filteredApps.sort((a, b) => a.id - b.id));
+      applyFilter(filter, filteredApps);
     } catch (error) {
       console.error('Failed to fetch applications', error);
     }
@@ -63,11 +71,61 @@ const ViewApplicationsPage = () => {
     setNewStatus(e.target.value);
   };
 
+  const handleLogout = () => {
+    history.push('/');
+  };
+
+  const applyFilter = (filter, applications) => {
+    let filtered = applications;
+    if (filter === "shortlisted") {
+      filtered = applications.filter(app => app.status === "Shortlisted");
+    } else if (filter === "not_shortlisted") {
+      filtered = applications.filter(app => app.status === "Not Shortlisted");
+    }
+    else if (filter === "all") {
+      filtered= applications.filter(app => app.status === "Applied");
+    }
+    
+    setFilteredApplications(filtered);
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    applyFilter(newFilter, applications);
+  };
+
   return (
     <div>
+      <header>
+        <div className="MNIT_name">
+          <img src={logo} alt="MNIT logo" />
+          <h1>
+            मालवीय राष्ट्रीय प्रौद्योगिकी संस्थान जयपुर (राष्ट्रीय महत्व का संस्थान)
+            <br />
+            Malaviya National Institute of Technology Jaipur (An Institute of National Importance)
+          </h1>
+        </div>
+      </header>
+      <nav className="navbar3">
+        <div className="navbar-left">
+          <Link className="home" to="/">Home</Link>
+        </div>
+        <div className="navbar-right">
+          <span className="username"><FontAwesomeIcon icon={faUser} /> {username}</span>
+          <button className="logout" onClick={handleLogout}>
+            <FontAwesomeIcon icon={faSignOutAlt} />
+            Logout
+          </button>
+        </div>
+      </nav>
       <h3>Applications for Internship {internshipId}</h3>
+      <div className='colomn'>
+        <button className={`colomn-1 ${filter === 'all' ? 'active' : ''}`} onClick={() => handleFilterChange("all")}>All Applications</button>
+        <button className={`colomn-2 ${filter === 'shortlisted' ? 'active' : ''}`} onClick={() => handleFilterChange("shortlisted")}>Shortlisted</button>
+        <button className={`colomn-3 ${filter === 'not_shortlisted' ? 'active' : ''}`} onClick={() => handleFilterChange("not_shortlisted")}>Not Shortlisted</button>
+      </div>
       <div className="table-container">
-        {applications.length > 0 ? (
+        {filteredApplications.length > 0 ? (
           <table>
             <thead>
               <tr>
@@ -78,7 +136,7 @@ const ViewApplicationsPage = () => {
               </tr>
             </thead>
             <tbody>
-              {applications.map(application => (
+              {filteredApplications.map(application => (
                 <tr key={application.id}>
                   <td>{application.first_name} {application.last_name}</td>
                   <td>{application.email}</td>
@@ -87,7 +145,7 @@ const ViewApplicationsPage = () => {
                     {editingStatus && editingStatus.id === application.id ? (
                       <div className="status-actions">
                         <select value={newStatus} onChange={handleStatusChange}>
-                          <option value="applied">Applied</option>
+                          <option value="Applied">Applied</option>
                           <option value="Shortlisted">Shortlisted</option>
                           <option value="Not Shortlisted">Not Shortlisted</option>
                         </select>

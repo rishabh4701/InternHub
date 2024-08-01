@@ -10,7 +10,7 @@ import logo from './images/Mnit_logo.png';
 import userIcon from './images/icons8-user-50.png';
 import RegistrationForm from './RegistrationForm';
 import Application_status from './Application_status';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+//import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 const Home = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobs, setJobs] = useState([]);
@@ -55,10 +55,7 @@ const Home = () => {
     const errors = {};
     if (!loginData.username) errors.username = 'Username is required';
     if (!loginData.password) errors.password = 'Password is required';
-    if (!loginData.password && !loginData.username){
-      errors.password = 'Invalid username or password';
-      errors.username = 'Invalid username or password';
-    }
+    // if(!loginData.general) errors.general = 'Invalid Username or Password';
     return errors;
   };
 
@@ -66,6 +63,9 @@ const Home = () => {
     const errors = {};
     if (!signupData.first_name) errors.first_name = 'First name is required';
     if (!signupData.email) errors.email = 'Email is required';
+    if (!signupData.username) errors.username = 'Username is required';
+    if (!signupData.password) errors.password = 'Password is required';
+    return errors; 
   }
   const handleLogin = (e) => {
     e.preventDefault();
@@ -111,6 +111,7 @@ const Home = () => {
     if (Object.keys(errors).length === 0) {
       axios.post('http://127.0.0.1:8000/auth/signup/', signupData)
         .then(response => {
+          console.log('Signup response:', response.data);
           alert('Signup successful! Please log in.');
           setShowLoginModal(true);
           setSignupData({ first_name: '', email: '', username: '', password: '' });
@@ -190,13 +191,20 @@ console.log(search);
 
       <nav className="navbar">
       <ul className="navbar-left">
-        <li><Link className="home" to="/" onClick={handleHome}>Home</Link></li>
+        <li><a className="home" onClick={handleHome}>Home</a></li>
         {loggedInUser && (
           <li><Link className="myapplication" to="#" onClick={handleMyApplication}>My Applications</Link></li>
         )}
+         <li><nav class="search-job">
+     <div class="search-bar">
+     <form class="search" role="search">
+     <input class="search-box" type="search" onChange={(e) => setSearch(e.target.value)} placeholder="Search Internships" aria-label="Search" />
+     {/* <button class="btn btn-outline-success" type="submit">Search</button> */}
+    </form>
+  </div>
+</nav></li>
       </ul>
       <ul className="navbar-right">
-        
         {loggedInUser ? (
           <>
             <li className="user1">
@@ -302,11 +310,26 @@ console.log(search);
                 <div className={`registration form active`}>
                   <header>Signup</header>
                   <form onSubmit={handleSignup}>
-                    <input type="text" name="first_name" placeholder="Enter your first name" value={signupData.first_name} onChange={handleSignupChange} />
+                    <input type="text" 
+                    name="first_name" 
+                    placeholder="Enter your first name"
+                    value={signupData.first_name} 
+                    onChange={handleSignupChange} 
+                    />
                     {signupErrors.first_name && <span className="error">{signupErrors.first_name}</span>}
-                    <input type="text" name="email" placeholder="Enter your email" value={signupData.email} onChange={handleSignupChange} />
+                    <input type="text" 
+                    name="email" 
+                    placeholder="Enter your email" 
+                    value={signupData.email} 
+                    onChange={handleSignupChange} 
+                    />
                     {signupErrors.email && <span className="error">{signupErrors.email}</span>}
-                    <input type="text" name="username" placeholder="Username" value={signupData.username} onChange={handleSignupChange} />
+                    <input type="text" 
+                    name="username" 
+                    placeholder="Username" 
+                    value={signupData.username} 
+                    onChange={handleSignupChange} 
+                    />
                     {signupErrors.username && <span className="error">{signupErrors.username}</span>}
                     <div className="password-wrapper">
                       <input
@@ -338,7 +361,7 @@ console.log(search);
 
       {showRegistrationForm && loggedInUser && (
         <RegistrationForm closeModal={() => setShowRegistrationForm(false)} 
-        userId={loggedInUser}
+        userId={loggedinUserId}
         iId={i_id}
         />
         

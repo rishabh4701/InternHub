@@ -90,7 +90,9 @@ form .category {
   margin: 14px 0;
   justify-content: space-between;
 }
-
+/* p {
+  color: red;
+} */
 
 form .button {
   height: 45px;
