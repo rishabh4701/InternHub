@@ -137,7 +137,7 @@ const MentorPage = (props) => {
   };
 
   const navigateToApplicationsPage = (id) => {
-    history.push(`/applications/${id}`);
+    history.push(`/applications/${username}/${id}`);
   };
 
   const handleAdd = async (newInternship) => {
