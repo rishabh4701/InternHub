@@ -10,7 +10,7 @@ import logo from './images/Mnit_logo.png';
 import userIcon from './images/icons8-user-50.png';
 import RegistrationForm from './RegistrationForm';
 import Application_status from './Application_status';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+// import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 const Home = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobs, setJobs] = useState([]);
@@ -66,7 +66,11 @@ const Home = () => {
     const errors = {};
     if (!signupData.first_name) errors.first_name = 'First name is required';
     if (!signupData.email) errors.email = 'Email is required';
-  }
+    if (!signupData.username) errors.username = 'Username is required';
+    if (!signupData.password) errors.password = 'Password is required';
+    return errors; // Add this line to return the errors object
+  };
+
   const handleLogin = (e) => {
     e.preventDefault();
     const errors = validateLogin();
@@ -80,17 +84,12 @@ const Home = () => {
           setShowLoginModal(false);
           window.localStorage.setItem("isLoggedIn", true);
           if (response.data.status === 'staff') {
-            // If user is staff, redirect to /mentor
             alert("Log in as mentor");
-            console.log(response.data);
-            // history.push('/mentor'); // Assuming 'history' is available from React Router
             history.push(`/mentor/${response.data.user_id}/${response.data.username}`);
           } else {
-            // Otherwise, handle regular user login
             setLoggedInUser(response.data.username);
             setloggedinUserId(response.data.user_id);
             setShowLoginModal(false);
-            //setShowRegistrationForm(true); // Show registration form after login if needed
           }
         })
         .catch(error => {
@@ -102,13 +101,14 @@ const Home = () => {
         });
     }
   };
-  
 
   const handleSignup = (e) => {
     e.preventDefault();
     const errors = validateSignup();
     setSignupErrors(errors);
-    if (Object.keys(errors).length === 0) {
+  
+    // Check if there are no validation errors
+    if (Object.keys(errors).length === 0) { // Ensure errors object is empty
       axios.post('http://127.0.0.1:8000/auth/signup/', signupData)
         .then(response => {
           alert('Signup successful! Please log in.');
@@ -124,6 +124,7 @@ const Home = () => {
         });
     }
   };
+  
 
   const handleLogout = () => {
     setLoggedInUser(null);
@@ -154,7 +155,7 @@ const Home = () => {
   // };
 
   const handleApplyNowClick = (jobId) => {
-    if (loggedInUser) {
+    if (loggedinUserId) {
       setShowRegistrationForm(true);
       seti_id(jobId);
     } else {
@@ -338,7 +339,7 @@ console.log(search);
 
       {showRegistrationForm && loggedInUser && (
         <RegistrationForm closeModal={() => setShowRegistrationForm(false)} 
-        userId={loggedInUser}
+        userId={loggedinUserId}
         iId={i_id}
         />
         
