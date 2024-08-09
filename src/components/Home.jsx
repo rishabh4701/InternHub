@@ -4,13 +4,23 @@ import { Link, useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserAlt, faCalendarAlt, faEye, faEyeSlash, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-
 import './Home_page.css';
 import logo from './images/Mnit_logo.png';
 import userIcon from './images/icons8-user-50.png';
 import RegistrationForm from './RegistrationForm';
 import Application_status from './Application_status';
-//import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import PhoneInput from 'react-phone-input-2';
+import Otp from './Otp';
+// import app from './firbase';
+//import { getAuth, RecaptchaVerifier } from "firebase/auth";
+// import {RecaptchaVerifier, signInWithPhoneNumber, getAuth} from 'firebase/auth';
+//import { honeNumber } from 'react-phone-number-input';
+// import OTPInput from 'react-otp-input';
+import 'react-phone-input-2/lib/style.css';
+// import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
+// import {auth} from '../firebase/setup';
+// import 'firebase/auth';
+
 const Home = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobs, setJobs] = useState([]);
@@ -24,12 +34,15 @@ const Home = () => {
   const [search, setSearch] = useState('');
   const [showMyApplication, setShowMyApplication] = useState(false);
   const [loginData, setLoginData] = useState({ username: '', password: '' });
-  const [signupData, setSignupData] = useState({ first_name: '', email: '', username: '', password: '' });
+  const [signupData, setSignupData] = useState({ first_name: '', email: '', username: '', password: '' , phone_number: ''});
   const [loginErrors, setLoginErrors] = useState({});
   const [signupErrors, setSignupErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [i_id, seti_id] = useState(null);
- 
+  const [showOtp, setShowOtp] = useState('');
+  //const [phone, setPhone] = useState("");
+  // const [otp, setOtp] = useState("");
+  // const [user, setUser] = useState(null);
   const loggedIn = window.localStorage.getItem("isLoggedIn");
   console.log(loggedIn, "login");
   console.log(loggedInUser);
@@ -65,8 +78,12 @@ const Home = () => {
     if (!signupData.email) errors.email = 'Email is required';
     if (!signupData.username) errors.username = 'Username is required';
     if (!signupData.password) errors.password = 'Password is required';
-    return errors; // Add this line to return the errors object
+
+    if (!signupData.phone_number) errors.phone_number = 'Phone Number is required';
+    return errors; 
+ 
   };
+
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -111,7 +128,7 @@ const Home = () => {
           console.log('Signup response:', response.data);
           alert('Signup successful! Please log in.');
           setShowLoginModal(true);
-          setSignupData({ first_name: '', email: '', username: '', password: '' });
+          setSignupData({ first_name: '', email: '', username: '', password: '', phone_number: '' });
         })
         .catch(error => {
           if (error.response && error.response.data) {
@@ -124,6 +141,68 @@ const Home = () => {
   };
   
 
+
+
+//  const sendOtp = async() => {
+//  try {
+//    const recaptcha = new RecaptchaVerifier(auth, "recaptcha",{});
+//    const confirmation = await signInWithPhoneNumber(auth, signupData.phone_number, recaptcha);  
+//   setUser(confirmation);
+//  } catch (error) {
+//   console.log(error); 
+//  }
+//  }
+
+//  const verifyOtp = async() => {
+//   try {
+//     await user.confirm(otp);
+//   } catch (error) {
+//     console.log(error);
+//   }
+//  }
+  // const sendOtp = async (e) => {
+  //   e.preventDefault();
+  
+  //   if (!signupData.phone_number) {
+  //     alert('Please enter a valid phone number.');
+  //     return;
+  //   }
+  
+  //   try {
+  //     window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
+  //       'size': 'invisible',
+  //       'callback': (response) => {
+  //         // reCAPTCHA solved, allow sendOtp
+  //         console.log('Recaptcha resolved');
+  //       },
+  //     }, auth);
+  
+  //     const appVerifier = window.recaptchaVerifier;
+  //     const formattedPhoneNumber = `+${signupData.phone_number}`;
+  
+  //     const confirmation = await signInWithPhoneNumber(auth, formattedPhoneNumber, appVerifier);
+  //     setUser(confirmation);
+  //     console.log('OTP sent', confirmation);
+  //   } catch (error) {
+  //     console.error('Error during sending OTP:', error);
+  //   }
+  // };
+  
+  // const verifyOtp = async () => {
+  //   if (!otp || !user) {
+  //     alert('Please enter the OTP.');
+  //     return;
+  //   }
+  
+  //   try {
+  //     await user.confirm(otp);
+  //     alert('OTP verified successfully');
+  //   } catch (error) {
+  //     console.error('Error during OTP verification:', error);
+  //     alert('Invalid OTP. Please try again.');
+  //   }
+  // };
+  
   const handleLogout = () => {
     setLoggedInUser(null);
     window.localStorage.setItem("isLoggedIn", false);
@@ -138,7 +217,9 @@ const Home = () => {
     // history.push('/application_status/{loggedInUser}');
     history.push(`/application_status/${loggedinUserId}/${loggedInUser}`);
   };
-  
+  const handleOtp = () => {
+  setShowOtp(true);
+  }
   const handleHome = () => {
     setShowMyApplication(false);
     setShowRegistrationForm(false);
@@ -282,7 +363,7 @@ console.log(search);
                       </span>
                     </div>
                     {loginErrors.password && <span className="error">{loginErrors.password}</span>}
-                    {loginErrors.general && <span className="error">{loginErrors.general}</span>}
+                    {loginErrors && <span className="error">{loginErrors.error}</span>}
                     <br />
                     <a href="#">Forgot password?</a>
                     <input type="submit" className="button" value="LogIn" />
@@ -307,6 +388,7 @@ console.log(search);
                 <button className="close" onClick={() => setShowSignupPage(false)}>&times;</button>
                 <div className={`registration form active`}>
                   <header>Signup</header>
+                  <div id='recatcha-container'></div>
                   <form onSubmit={handleSignup}>
                     <input type="text" 
                     name="first_name" 
@@ -321,7 +403,42 @@ console.log(search);
                     value={signupData.email} 
                     onChange={handleSignupChange} 
                     />
-                    {signupErrors.email && <span className="error">{signupErrors.email}</span>}
+                  {signupErrors.email && <span className="error">{signupErrors.email}</span>}
+                  <PhoneInput  
+                    type="number"
+                    country={'IN'}
+                    name="phone_number" 
+                    placeholder="Enter your number" 
+                    value={signupData.phone_number} 
+                    onChange={(phone_number) => setSignupData("+" + phone_number)} 
+                    inputProps={{
+                      name: 'phone_number',
+                      required: true,
+                      autoFocus: true
+                    }}
+                      />
+                    {/* <OTPInput
+                       value={otp}
+                       onChange={setOtp}  
+                      OTPLength = {6}
+                      otpType = "number"
+                      disabled={false}
+                      autoFocus
+                      className="otp"
+                    ></OTPInput> */}
+                   {/* <input
+                   value={otp}
+                   onChange={setOtp}
+                    OTPLength = {6}
+                   otpType = "number"
+                   disabled={false}
+                   autoFocus
+                   className="otp"
+                   ></input>
+                   <button className='otp-btn'>
+                    <span>Verify OTP</span>
+                   </button> */}
+                  {/* {signupErrors.phone_number && <span className='error'>{signupErrors.phone_number}</span>} */}
                     <input type="text" 
                     name="username" 
                     placeholder="Username" 
@@ -343,7 +460,16 @@ console.log(search);
                     </div>
                     {signupErrors.password && <span className="error">{signupErrors.password}</span>}
                     {signupErrors.general && <span className="error">{signupErrors.general}</span>}
-                    <input type="submit" className="button" value="Signup" />
+                    {/* <div id="sign-in-button"></div>
+                   
+                    <button className='otp-btn' onClick={sendOtp}>Send OTP</button>
+                    <input type="number"
+                    name='OTP'
+                    placeholder='Enter the OTP'
+                    onChange={(e) => setOtp(e.target.value)}
+                    />
+                    <button className='otp-verify' onClick={verifyOtp}>Verify OTP</button>  */}
+                    <input type="submit" onClick={handleOtp} className="button" value="Signup" />
                   </form>
                   <div className="signup">
                     <span className="signup">Already have an account?
@@ -370,6 +496,9 @@ console.log(search);
          <Application_status  />
       )}
       
+      {showOtp &&(
+        <Otp/>
+      )}
       <div className="pagination">
         <button disabled={currentPage <= 1} className="btn" onClick={handlePrevClick}>Prev</button>
         <span>{currentPage} of {totalPages}</span>
