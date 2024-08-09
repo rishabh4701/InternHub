@@ -25,6 +25,7 @@ input.search-box {
 }
 .popup :active {
   display: block;
+
 }
 .popup .close {
   position: absolute;
@@ -121,6 +122,114 @@ small {
   font-size: medium;
 }
 .col-sm-12.col-md-4.d-flex.flex-column.align-items-start.align-items-md-end.justify-content-center {
+=======
+ }
+  .popup .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  /* //////////////////////////// */
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    background-color: #f9f9f9;
+    display:block;
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+  }
+  
+  .pagination .btn {
+    border: none;
+    background-color: blue;
+    color: white;
+    padding: 5px;
+    border-radius: 10px;
+    margin: 0 10px;
+    cursor: pointer;
+    font-size: medium;
+  }
+
+
+  .pagination span {
+    margin: 0 10px;
+    font-size: 16px;
+    border-bottom: 4px solid orange;
+  }
+  
+  .username{
+    text-decoration: underline;
+  }
+  
+  
+   .user{
+    float: right;
+    margin-top: 9px;
+    margin-right: 20px;
+    color: white; 
+  }
+
+  .MNIT_name{
+    display: flex;
+    justify-content: center;
+    font-size: 13px;
+    margin-top: 25px;
+  }
+  .MNIT_name img{
+    width: 10%;
+    height: 10%;
+    padding: 10px;
+  }
+  .job-item {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 20px;
+      margin-top: 20px;
+      position: relative;
+    display: flex;
+    border-bottom: 10px solid orange;
+  }
+    
+    .job-item .btn-primary {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      border: 1px solid ;
+      color: white;
+      background-color: blue;
+      text-decoration: none;
+      padding: 5px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .job-item .btn-primary:hover{
+      background-color: orange;
+  }
+  .fa-user-alt:before {
+      content:icon;
+      color: black;
+      padding: 5px;
+      align-items: start;
+  }
+  .faCalenderAlt:before {
+      content: "\f073";
+      color: black;
+      padding: 5px;
+  }
+  small {
+      font-size: medium;
+  }
+  .col-sm-12.col-md-4.d-flex.flex-column.align-items-start.align-items-md-end.justify-content-center{
+
   margin-top: 20px;
 }
 h2 {

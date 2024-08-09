@@ -7,9 +7,14 @@ import Dashboard from './components/Dashboard';  // Another component, e.g., for
 //import InternshipsPage from './components/Mentor';
 import Application_status from './components/Application_status';
 import MentorPage from './components/Mentor';
+
 import AdminPage from './components/Admin';
 import ViewApplications from './components/ViewAppplications';
 import Users from './components/Users';
+
+=======
+import ViewApplications from './components/ViewAppplications';
+import Otp from './components/Otp';
 
 function App() {
   const userId = '1';
@@ -28,6 +33,7 @@ function App() {
           {/* <Route path="/mentor" render={(props) => <InternshipsPage userId={userId} />} /> */}
           <Route path="/mentor/:userId/:username" component={MentorPage} />
           <Route path="/applications/:username/:internshipId" component={ViewApplications} />
+          <Route path="/Otp" component={Otp}/>
         </Switch>
       </div>
     </Router>
