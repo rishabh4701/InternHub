@@ -84,6 +84,9 @@ form .input-box span.details {
   transition: all 0.3s ease;
 }
 
+.input-box p{
+  color: red;
+}
 form .category {
   display: flex;
   width: 80%;

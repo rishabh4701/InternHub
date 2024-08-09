@@ -6,7 +6,7 @@ import { faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import logo from './images/Mnit_logo.png';
 
 const ViewApplicationsPage = () => {
-  const { internshipId, username } = useParams();
+  const {internshipId, username } = useParams();
   const [applications, setApplications] = useState([]);
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [editingStatus, setEditingStatus] = useState(null);

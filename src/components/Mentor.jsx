@@ -24,10 +24,11 @@ const MentorPage = (props) => {
       const response = await fetch('http://127.0.0.1:8000/internships/');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
-      }
+      } 
       const data = await response.json();
-      setInternships(data);
-      filterInternships(data);
+      const sortedData = data.sort((a, b) => (a.Status === 'Open' ? -1 : 1));
+    setInternships(sortedData);
+    filterInternships(sortedData);
     } catch (error) {
       console.error('Error fetching internships:', error);
     }
@@ -47,6 +48,7 @@ const MentorPage = (props) => {
     setEditingInternshipId(internshipId);
   };
 
+  const status = ['Open', 'Closed'];
   const handleSave = async (updatedInternship) => {
     try {
       const response = await fetch(`http://127.0.0.1:8000/internships/${updatedInternship.id}/`, {
@@ -114,12 +116,17 @@ const MentorPage = (props) => {
           onChange={handleChange}
         />
         <label>Status:</label>
-        <input
+        <select 
           type="text"
           name="Status"
           value={updatedInternship.Status}
           onChange={handleChange}
-        />
+        >
+        <option value="" disabled>Status</option>
+        {status.map((status, internship) => (
+                  <option key={internship.id} value={status}>{status}</option>
+        ))}
+         </select>
         <div className="form-buttons">
           <button type="submit" className="save-button">Save</button>
           <button type="button" className="cancel-button" onClick={onCancel}>Cancel</button>
@@ -225,12 +232,17 @@ const MentorPage = (props) => {
           onChange={handleChange}
         />
         <label>Status:</label>
-        <input
+        <select 
           type="text"
           name="Status"
           value={newInternship.Status}
           onChange={handleChange}
-        />
+        >
+        <option value="" disabled>Status</option>
+        {status.map((status, internship) => (
+                  <option key={internship.id} value={status}>{status}</option>
+        ))}
+         </select>
         <div className="form-buttons">
           <button type="submit" className="save-button">Add Internship</button>
           <button type="button" className="cancel-button" onClick={onCancel}>Cancel</button>
