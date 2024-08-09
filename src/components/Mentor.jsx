@@ -121,6 +121,16 @@ const MentorPage = (props) => {
           name="Status"
           value={updatedInternship.Status}
           onChange={handleChange}
+
+        />
+        <label>Skills:</label>
+        <input
+          type="text"
+          name="Skills"
+          value={updatedInternship.Skills}
+          onChange={handleChange}
+        />
+=======
         >
         <option value="" disabled>Status</option>
         {status.map((status, internship) => (
@@ -176,6 +186,7 @@ const MentorPage = (props) => {
       Status: '',
       Stipend: '',
       Description: '',
+      Skills:'',
       user_id: userId, // Assuming new internships will have the same user_id
     });
 
@@ -237,12 +248,22 @@ const MentorPage = (props) => {
           name="Status"
           value={newInternship.Status}
           onChange={handleChange}
+
+        />
+        <label>Skills:</label>
+        <input
+          type="text"
+          name="Skills"
+          value={newInternship.Skills}
+          onChange={handleChange}
+        />
         >
         <option value="" disabled>Status</option>
         {status.map((status, internship) => (
                   <option key={internship.id} value={status}>{status}</option>
         ))}
          </select>
+
         <div className="form-buttons">
           <button type="submit" className="save-button">Add Internship</button>
           <button type="button" className="cancel-button" onClick={onCancel}>Cancel</button>

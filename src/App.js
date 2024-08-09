@@ -7,8 +7,15 @@ import Dashboard from './components/Dashboard';  // Another component, e.g., for
 //import InternshipsPage from './components/Mentor';
 import Application_status from './components/Application_status';
 import MentorPage from './components/Mentor';
-import ViewApplications from './components/ViewAppplications'
-import Otp from './components/Otp'
+
+import AdminPage from './components/Admin';
+import ViewApplications from './components/ViewAppplications';
+import Users from './components/Users';
+
+=======
+import ViewApplications from './components/ViewAppplications';
+import Otp from './components/Otp';
+
 function App() {
   const userId = '1';
   return (
@@ -17,9 +24,11 @@ function App() {
       <div className="App">
         <Switch>
           <Route path="/" exact component={ Home} />
+          <Route path="/users/:token" component={Users} />
           <Route path="/login" component={LoginRegistrationForm} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/mentor/:userId/:username" component={MentorPage} />
+          <Route path="/admin/:userId/:username/:token" component={AdminPage} />
           <Route path="/application_status/:userId/:username" component={Application_status } />
           {/* <Route path="/mentor" render={(props) => <InternshipsPage userId={userId} />} /> */}
           <Route path="/mentor/:userId/:username" component={MentorPage} />
