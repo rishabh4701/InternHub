@@ -29,17 +29,32 @@ const Home = () => {
   const [signupErrors, setSignupErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [i_id, seti_id] = useState(null);
- 
+  const [token, setToken] = useState('');
   const loggedIn = window.localStorage.getItem("isLoggedIn");
   console.log(loggedIn, "login");
   console.log(loggedInUser);
   const history = useHistory();
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/internships/')
-      .then(response => setJobs(response.data))
-      .catch(error => console.error('There was an error fetching the jobs!', error));
+    fetchInternships();
+    // axios.get('http://127.0.0.1:8000/internships/')
+    //   .then(response => setJobs(response.data))
+    //   .catch(error => console.error('There was an error fetching the jobs!', error));
   }, []);
+
+  const fetchInternships = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/internships/');
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      } 
+      const data = await response.json();
+      const sortedData = data.sort((a, b) => (a.Status === 'Open' ? -1 : 1));
+    setJobs(sortedData);
+    } catch (error) {
+      console.error('Error fetching internships:', error);
+    }
+  };
 
   const handleLoginChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -55,7 +70,7 @@ const Home = () => {
     const errors = {};
     if (!loginData.username) errors.username = 'Username is required';
     if (!loginData.password) errors.password = 'Password is required';
-    // if(!loginData.general) errors.general = 'Invalid Username or Password';
+    // if(loginErrors.general) errors.general = 'Invalid Username or Password';
     return errors;
   };
 
@@ -83,7 +98,12 @@ const Home = () => {
           if (response.data.status === 'staff') {
             alert("Log in as mentor");
             history.push(`/mentor/${response.data.user_id}/${response.data.username}`);
-          } else {
+          }else if(response.data.status === 'superuser') {
+            alert("Log in as Admin ");
+            setToken(response.data.access);
+            history.push(`/admin/${response.data.user_id}/${response.data.username}/${response.data.access}`);
+          } 
+          else {
             setLoggedInUser(response.data.username);
             setloggedinUserId(response.data.user_id);
             setShowLoginModal(false);
@@ -96,6 +116,7 @@ const Home = () => {
             setLoginErrors({ general: 'Invalid username or password' });
           }
         });
+        console.log(loginErrors);
     }
   };
 
@@ -224,20 +245,17 @@ console.log(search);
           <div id="tab-1" className="tab-pane fade show p-0 active">
             {currentJobs.filter((job)=> {return search.toLowerCase() === '' ? job : job.Title.toLowerCase().includes(search)}).map((job, index) => (
               <div key={index} className="job-item p-4 mb-4" onClick={() => setSelectedJob(job)}>
-                <div className="row g-4">
-                  <div className="col-sm-12 col-md-8 d-flex align-items-center">
-                    <div className="text-start ps-4">
-                      <h2 className="mb-3">{job.Title}</h2>
-                      <span className="text-truncate me-3">
-                        <FontAwesomeIcon icon={faUserAlt} className="text-primary me-2" /> {job.Mentor}
-                      </span>
-                    </div>
+                <div className="job-container">
+                  <p className="job-status">Status: {job.Status}</p>
+                  <div className="job-title-container">
+                    <h2 className="job-title">{job.Title}</h2>  
                   </div>
-                  <div className="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
-                    <div className="d-flex">
-                      <button className="btn btn-primary" onClick={() => handleApplyNowClick(job.id)}>Apply Now</button>
-                    </div>
-                    <small className="text-truncate">
+                  <span className="job-mentor">
+                      <FontAwesomeIcon icon={faUserAlt} className="text-primary me-2" /> {job.Mentor}
+                  </span>
+                  <div className="job-actions">
+                    <button className="btn btn-primary" onClick={() => handleApplyNowClick(job.id)}>Apply Now</button>
+                    <small className="job-duration">
                       <FontAwesomeIcon icon={faCalendarAlt} className="text-primary me-2" /> Duration: {job.Duration}
                     </small>
                   </div>
@@ -282,7 +300,7 @@ console.log(search);
                       </span>
                     </div>
                     {loginErrors.password && <span className="error">{loginErrors.password}</span>}
-                    {loginErrors.general && <span className="error">{loginErrors.general}</span>}
+                    {loginErrors && <span className="error">{loginErrors.error}</span>}
                     <br />
                     <a href="#">Forgot password?</a>
                     <input type="submit" className="button" value="LogIn" />

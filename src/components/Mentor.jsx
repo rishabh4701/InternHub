@@ -120,6 +120,13 @@ const MentorPage = (props) => {
           value={updatedInternship.Status}
           onChange={handleChange}
         />
+        <label>Skills:</label>
+        <input
+          type="text"
+          name="Skills"
+          value={updatedInternship.Skills}
+          onChange={handleChange}
+        />
         <div className="form-buttons">
           <button type="submit" className="save-button">Save</button>
           <button type="button" className="cancel-button" onClick={onCancel}>Cancel</button>
@@ -169,6 +176,7 @@ const MentorPage = (props) => {
       Status: '',
       Stipend: '',
       Description: '',
+      Skills:'',
       user_id: userId, // Assuming new internships will have the same user_id
     });
 
@@ -229,6 +237,13 @@ const MentorPage = (props) => {
           type="text"
           name="Status"
           value={newInternship.Status}
+          onChange={handleChange}
+        />
+        <label>Skills:</label>
+        <input
+          type="text"
+          name="Skills"
+          value={newInternship.Skills}
           onChange={handleChange}
         />
         <div className="form-buttons">

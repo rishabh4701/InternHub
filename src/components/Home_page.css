@@ -1,5 +1,5 @@
 /* home_page */
-.applications{
+.applications {
   max-width: 700px;
   width: 100%;
   cursor: pointer;
@@ -11,169 +11,157 @@ input.search-box {
   border-radius: 2px;
 }
 .popup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    background-color: #fff;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
- .popup :active{
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.popup :active {
   display: block;
- }
-  .popup .close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 20px;
-    cursor: pointer;
-  }
-  /* //////////////////////////// */
-  body {
-    font-size: 16px;
-    line-height: 1.5;
-    color: #333;
-    background-color: #f9f9f9;
-    display:block;
-    padding-left: 80px;
-    padding-right: 80px;
-  }
-  .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 0;
-  }
-  
-  .pagination .btn {
-    border: none;
-    background-color: blue;
-    color: white;
-    padding: 5px;
-    border-radius: 10px;
-    margin: 0 10px;
-    cursor: pointer;
-    font-size: medium;
-  }
-
-
-  .pagination span {
-    margin: 0 10px;
-    font-size: 16px;
-    border-bottom: 4px solid orange;
-  }
-  
-  .username{
-    text-decoration: underline;
-  }
-  
-  
-   .user{
-    float: right;
-    margin-top: 9px;
-    margin-right: 20px;
-    color: white;
-  }
-
-  .MNIT_name{
-    display: flex;
-    justify-content: center;
-    font-size: 13px;
-    margin-top: 25px;
-  }
-  .MNIT_name img{
-    width: 10%;
-    height: 10%;
-    padding: 10px;
-  }
-  .job-item {
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      padding: 20px;
-      margin-top: 20px;
-      position: relative;
-    display: flex;
-    border-bottom: 10px solid orange;
-  }
-    
-    .job-item .btn-primary {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      border: 1px solid ;
-      color: white;
-      background-color: blue;
-      text-decoration: none;
-      padding: 5px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .job-item .btn-primary:hover{
-      background-color: orange;
-  }
-  .fa-user-alt:before {
-      content:icon;
-      color: black;
-      padding: 5px;
-      align-items: start;
-  }
-  .faCalenderAlt:before {
-      content: "\f073";
-      color: black;
-      padding: 5px;
-  }
-  small {
-      font-size: medium;
-  }
-  .col-sm-12.col-md-4.d-flex.flex-column.align-items-start.align-items-md-end.justify-content-center{
+}
+.popup .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+}
+body {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #f9f9f9;
+  padding-left: 80px;
+  padding-right: 80px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+.pagination .btn {
+  border: none;
+  background-color: blue;
+  color: white;
+  padding: 5px;
+  border-radius: 10px;
+  margin: 0 10px;
+  cursor: pointer;
+  font-size: medium;
+}
+.pagination span {
+  margin: 0 10px;
+  font-size: 16px;
+  border-bottom: 4px solid orange;
+}
+.username {
+  text-decoration: underline;
+}
+.user {
+  float: right;
+  margin-top: 9px;
+  margin-right: 20px;
+  color: white;
+}
+.MNIT_name {
+  display: flex;
+  justify-content: center;
+  font-size: 13px;
+  margin-top: 25px;
+}
+.MNIT_name img {
+  width: 10%;
+  height: 10%;
+  padding: 10px;
+}
+.job-item {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
   margin-top: 20px;
-  }
-  h2 {
-      display: block;
-      font-size: 1.5em;
-      margin-block-start: 0.10em;
-      margin-block-end: 0.83em;
-      margin-inline-start: 0px;
-      margin-inline-end: 0px;
-      font-weight: bold;
-      unicode-bidi: isolate;
-      text-decoration: none;
-      cursor: pointer;;
-  }
-  .me-3{
-      padding: 20px 0px;
-      
-  }
-  .mb-3::after{
-    content: '';
-    display: block;
-    width: 40%; /* Less than half the width of the parent element */
-    height: 3px; /* Adjust height of the underline */
-    background-color: blue; /* Color of the underline */
-    left: 50%;
-    bottom: -5px;
-  }
+  position: relative;
+  display: flex;
+  border-bottom: 10px solid orange;
+}
+.job-item .btn-primary {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  border: 1px solid;
+  color: white;
+  background-color: blue;
+  text-decoration: none;
+  padding: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.job-item .btn-primary:hover {
+  background-color: orange;
+}
+.fa-user-alt:before {
+  content: icon;
+  color: black;
+  padding: 5px;
+  align-items: start;
+}
+.faCalenderAlt:before {
+  content: "\f073";
+  color: black;
+  padding: 5px;
+}
+small {
+  font-size: medium;
+}
+.col-sm-12.col-md-4.d-flex.flex-column.align-items-start.align-items-md-end.justify-content-center {
+  margin-top: 20px;
+}
+h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-block-start: 0.10em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+  unicode-bidi: isolate;
+  text-decoration: none;
+  cursor: pointer;
+}
+.me-3 {
+  padding: 20px 0px;
+}
+.mb-3::after {
+  content: '';
+  display: block;
+  width: 40%; /* Less than half the width of the parent element */
+  height: 3px; /* Adjust height of the underline */
+  background-color: blue; /* Color of the underline */
+  left: 50%;
+  bottom: -5px;
+}
 /* home_page */
-
-  /* login */
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
-*{
+/* login */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
-body{
+body {
   min-height: 100vh;
   width: 100%;
   background: white;
 }
-.close{
+.close {
   position: absolute;
   left: 90%;
   background-color: rgb(225, 225, 225);
@@ -186,23 +174,21 @@ body{
   font-size: 30px;
   cursor: pointer;
 }
-
-
 /* form validation */
-.error{
+.error {
   color: red;
 }
 /* form validation */
-.modal-show-1{
+.modal-show-1 {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   max-width: 430px;
   width: 100%;
   background: rgb(225, 225, 225);
   border-radius: 7px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
   padding: 30px;
 }
 .password-wrapper {
@@ -210,63 +196,60 @@ body{
   display: flex;
   align-items: center;
 }
-
 .password-wrapper input {
   width: 100%;
   padding-right: 30px; /* Adjust this if needed */
 }
-
 .password-toggle-icon {
   position: absolute;
   right: 0.875rem;
   top: 1.01rem;
   cursor: pointer;
 }
-
-.model-show-1 .registration{
+.model-show-1 .registration {
   display: none;
 }
-#check:checked ~ .registration{
+#check:checked ~ .registration {
   display: block;
 }
-#check:checked ~ .login{
+#check:checked ~ .login {
   display: none;
 }
-#check{
+#check {
   display: none;
 }
-.model-show-1 .form{
+.model-show-1 .form {
   padding: 2rem;
 }
-.form header{
+.form header {
   font-size: 2rem;
   font-weight: 500;
   text-align: center;
   margin-bottom: 1.5rem;
   color: black;
 }
- .form input{
-   height: 60px;
-   width: 100%;
-   padding: 0 15px;
-   font-size: 17px;
-   margin-bottom: 1rem;
-   border: 1px solid rgb(0, 0, 0);
-   border-radius: 6px;
-   outline: none;
- }
- .form input:focus{
-   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
- }
-.form a{
+.form input {
+  height: 60px;
+  width: 100%;
+  padding: 0 15px;
+  font-size: 17px;
+  margin-bottom: 1rem;
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 6px;
+  outline: none;
+}
+.form input:focus {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+.form a {
   font-size: 16px;
   color: rgb(0, 0, 0);
   text-decoration: none;
 }
-.form a:hover{
+.form a:hover {
   text-decoration: underline;
 }
-.form input.button{
+.form input.button {
   color: rgb(0, 0, 0);
   background: white;
   font-size: 1.2rem;
@@ -276,31 +259,25 @@ body{
   cursor: pointer;
   transition: 0.4s;
 }
-.form input.button:hover{
+.form input.button:hover {
   background: rgb(234, 213, 213);
 }
-.signup{
+.signup {
   font-size: 17px;
   text-align: center;
   color: rgb(0, 0, 0);
 }
-.signup label{
+.signup label {
   color: blue;
   cursor: pointer;
   padding-left: 5px;
 }
-.signup label:hover{
+.signup label:hover {
   text-decoration: underline;
 }
 /* login */
-
-
 /* RegistrationForm.css */
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
-
-
-.close1{
+.close1 {
   right: 90%;
 }
 .model-show-1 {
@@ -311,13 +288,11 @@ body{
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
 }
-
 .model-show-1 .title {
   font-size: 25px;
   font-weight: 500;
   position: relative;
 }
-
 .model-show-1 .title::before {
   content: "";
   position: absolute;
@@ -328,26 +303,22 @@ body{
   border-radius: 5px;
   background: blue;
 }
-
 .content form .user-details {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   margin: 20px 0 12px 0;
 }
-
 form .user-details .input-box {
   margin-bottom: 15px;
   width: calc(100% / 2 - 20px);
 }
-
 form .input-box span.details {
   display: block;
   font-weight: 500;
   margin-bottom: 5px;
   margin-top: 10px;
 }
-
 .user-details .input-box input {
   height: 45px;
   width: 100%;
@@ -359,20 +330,16 @@ form .input-box span.details {
   border-bottom-width: 2px;
   transition: all 0.3s ease;
 }
-
 form .category {
   display: flex;
   width: 80%;
   margin: 14px 0;
   justify-content: space-between;
 }
-
-
 form .button {
   height: 45px;
   margin: 35px 0;
 }
-
 form .button input {
   height: 100%;
   width: 100%;
@@ -386,14 +353,11 @@ form .button input {
   transition: all 0.3s ease;
   background: blue;
 }
-
 form .button input:hover {
   background: rgb(60, 60, 222);
 }
-
- /* registration */
-
- .navbar {
+/* registration */
+.navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -402,40 +366,103 @@ form .button input:hover {
   padding: 10px;
   color: white;
 }
-
 .navbar-left, .navbar-right {
   display: flex;
   list-style-type: none;
 }
-
 .navbar-left .home, .navbar-left .myapplication, .navbar-right .about, .navbar-right .contact, .navbar-right .logout {
   color: white;
   text-decoration: none;
   margin-right: 20px;
   cursor: pointer;
 }
-
 .navbar-left .home:hover, .navbar-left .myapplication:hover, .navbar-right .about:hover, .navbar-right .contact:hover, .navbar-right .logout:hover {
   color: #ddd;
 }
-
 .user1 {
   display: flex;
   align-items: center;
   margin-right: 20px;
 }
-
 .user-id-label {
   margin-right: 5px;
 }
-
 .user {
   display: flex;
   align-items: center;
   cursor: pointer;
 }
-
 .user img {
   width: 30px;
   height: 30px;
+}
+.col-sm-12.col-md-8.d-flex.align-items-center p {
+  margin: 0 0 10px;
+}
+
+/* Position job title and status */
+.job-item .job-title {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.job-title-container {
+  position: relative;
+}
+
+.job-title-container h2 {
+  position: relative;
+  display: inline-block; /* Ensure the ::after element is aligned correctly */
+  margin-bottom: 10px; /* Adjust margin as needed */
+}
+
+.job-title-container h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px; /* Adjust the value to control the distance from the text */
+  height: 3px;
+  width: 40%; /* Adjust the width to control the length of the underline */
+  border-radius: 5px;
+  background: blue;
+}
+
+.job-mentor {
+  margin-top: 25px;
+  display: inline-block;
+  margin-right: 20px; /* Adjust the margin to control spacing between mentor and duration */
+}
+
+.job-duration {
+  display: inline-block;
+  margin-top:20px; /* Ensure there's a gap between mentor and duration */
+}
+
+.job-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Adjust the gap value as needed */
+  align-items: center;
+}
+
+.job-actions .btn-primary {
+  margin-right: 20px; /* Space between button and duration */
+}
+
+.job-item .job-status {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  color: black;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Ensure job-item is relatively positioned to contain the absolute positioning */
+.job-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
