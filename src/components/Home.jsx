@@ -9,17 +9,11 @@ import logo from './images/Mnit_logo.png';
 import userIcon from './images/icons8-user-50.png';
 import RegistrationForm from './RegistrationForm';
 import Application_status from './Application_status';
-import PhoneInput from 'react-phone-input-2';
-import Otp from './Otp';
-// import app from './firbase';
-//import { getAuth, RecaptchaVerifier } from "firebase/auth";
-// import {RecaptchaVerifier, signInWithPhoneNumber, getAuth} from 'firebase/auth';
-//import { honeNumber } from 'react-phone-number-input';
-// import OTPInput from 'react-otp-input';
-import 'react-phone-input-2/lib/style.css';
-// import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
-// import {auth} from '../firebase/setup';
-// import 'firebase/auth';
+//import emailjs from 'emailjs-com';
+import ReCAPTCHA from 'react-google-recaptcha';
+//import PhoneInput from 'react-phone-input-2';
+//import Otp from './Otp';
+//import 'react-phone-input-2/lib/style.css';
 
 const Home = () => {
   const [selectedJob, setSelectedJob] = useState(null);
@@ -39,10 +33,14 @@ const Home = () => {
   const [signupErrors, setSignupErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [i_id, seti_id] = useState(null);
-
   const [token, setToken] = useState('');
-=======
-  const [showOtp, setShowOtp] = useState('');
+  //const [email, setEmail] = useState('');
+  // const [otp, setOtp] = useState('');
+  // const [generatedOtp, setGeneratedOtp] = useState(null);
+  // const [otpSent, setOtpSent] = useState(false);
+  //const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState('');
+  //const [showOtp, setShowOtp] = useState('');
   //const [phone, setPhone] = useState("");
   // const [otp, setOtp] = useState("");
   // const [user, setUser] = useState(null);
@@ -97,10 +95,7 @@ const Home = () => {
     if (!signupData.email) errors.email = 'Email is required';
     if (!signupData.username) errors.username = 'Username is required';
     if (!signupData.password) errors.password = 'Password is required';
-
-    if (!signupData.phone_number) errors.phone_number = 'Phone Number is required';
     return errors; 
- 
   };
 
 
@@ -108,9 +103,12 @@ const Home = () => {
     e.preventDefault();
     const errors = validateLogin();
     setLoginErrors(errors);
-    
+    if (!recaptchaToken) {
+      alert('Please complete the reCAPTCHA');
+      return;
+  }
     if (Object.keys(errors).length === 0) {
-      axios.post('http://127.0.0.1:8000/auth/login/', loginData)
+      axios.post('http://127.0.0.1:8000/auth/login/', {...loginData, recaptchaToken: recaptchaToken})
         .then(response => {
           setLoggedInUser(response.data.username);
           setloggedinUserId(response.data.user_id);
@@ -145,15 +143,23 @@ const Home = () => {
     e.preventDefault();
     const errors = validateSignup();
     setSignupErrors(errors);
-  
+    // if (!otpSent || !isOtpVerified) {
+    //   alert("Please verify your OTP before signing up.");
+    //   return;
+    // }
+    if (!recaptchaToken) {
+      alert('Please complete the reCAPTCHA');
+      return;
+  }
     // Check if there are no validation errors
     if (Object.keys(errors).length === 0) { // Ensure errors object is empty
-      axios.post('http://127.0.0.1:8000/auth/signup/', signupData)
+      axios.post('http://127.0.0.1:8000/auth/signup/', {...signupData, recaptchaToken: recaptchaToken})
         .then(response => {
           console.log('Signup response:', response.data);
           alert('Signup successful! Please log in.');
           setShowLoginModal(true);
-          setSignupData({ first_name: '', email: '', username: '', password: '', phone_number: '' });
+          setSignupData({ first_name: '', username: '', password: '', email: ''});
+          window.location.reload();
         })
         .catch(error => {
           if (error.response && error.response.data) {
@@ -164,76 +170,67 @@ const Home = () => {
         });
     }
   };
-  
+
+  const handleSendEmail = () => {
+    const emailData = {
+        email: signupData.email,  // or any other email you want to send to
+        subject: 'Welcome to Our Service!',
+        message: `Dear ${signupData.first_name},\n\nThank you for signing up! We're excited to have you on board.\n\nBest regards,\nThe Team`
+    };
+
+    axios.post('http://127.0.0.1:8000/auth/send-email/', emailData)
+        .then(response => {
+            console.log('Email sent response:', response.data);
+            alert('Email sent successfully!');
+        })
+        .catch(error => {
+            console.error('Error sending email:', error);
+            alert('There was an error sending the email. Please try again.');
+        });
+};
 
 
+  // const sendOTP = () => {
+  //   let otp_val = Math.floor(Math.random() * 10000);
+  //   setGeneratedOtp(otp_val);
 
-//  const sendOtp = async() => {
-//  try {
-//    const recaptcha = new RecaptchaVerifier(auth, "recaptcha",{});
-//    const confirmation = await signInWithPhoneNumber(auth, signupData.phone_number, recaptcha);  
-//   setUser(confirmation);
-//  } catch (error) {
-//   console.log(error); 
-//  }
-//  }
+  //   let emailBody = `<h2>Your OTP is </h2>${otp_val}`;
 
-//  const verifyOtp = async() => {
-//   try {
-//     await user.confirm(otp);
-//   } catch (error) {
-//     console.log(error);
-//   }
-//  }
-  // const sendOtp = async (e) => {
-  //   e.preventDefault();
-  
-  //   if (!signupData.phone_number) {
-  //     alert('Please enter a valid phone number.');
-  //     return;
-  //   }
-  
-  //   try {
-  //     window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
-  //       'size': 'invisible',
-  //       'callback': (response) => {
-  //         // reCAPTCHA solved, allow sendOtp
-  //         console.log('Recaptcha resolved');
-  //       },
-  //     }, auth);
-  
-  //     const appVerifier = window.recaptchaVerifier;
-  //     const formattedPhoneNumber = `+${signupData.phone_number}`;
-  
-  //     const confirmation = await signInWithPhoneNumber(auth, formattedPhoneNumber, appVerifier);
-  //     setUser(confirmation);
-  //     console.log('OTP sent', confirmation);
-  //   } catch (error) {
-  //     console.error('Error during sending OTP:', error);
+  //   emailjs.send('service_elco1zp', 'template_gm3clqq', {
+  //       to_email: signupData.email,
+  //       otp: otp_val,
+  //       message: emailBody
+  //     }, 'LPYKBbs7hJvgaqLAY')
+  //     .then((response) => {
+  //       console.log('SUCCESS!', response.status, response.text);
+  //       alert("OTP sent to your email " + signupData.email);
+  //       setOtpSent(true);
+  //     })
+  //     .catch((err) => {
+  //       console.error('FAILED...', err);
+  //       alert("Failed to send OTP. Please try again.");
+  //     });
+  // };
+
+  // const verifyOTP = () => {
+  //   if (otp == generatedOtp) {
+  //     alert("Email address verified...");
+  //     setIsOtpVerified(true);
+  //   } else {
+  //     alert("Invalid OTP");
   //   }
   // };
-  
-  // const verifyOtp = async () => {
-  //   if (!otp || !user) {
-  //     alert('Please enter the OTP.');
-  //     return;
-  //   }
-  
-  //   try {
-  //     await user.confirm(otp);
-  //     alert('OTP verified successfully');
-  //   } catch (error) {
-  //     console.error('Error during OTP verification:', error);
-  //     alert('Invalid OTP. Please try again.');
-  //   }
-  // };
+  const handleRecaptchaChange = (token) => {
+    setRecaptchaToken(token);
+};
+
   
   const handleLogout = () => {
     setLoggedInUser(null);
     window.localStorage.setItem("isLoggedIn", false);
     setShowMyApplication(false);
     setShowRegistrationForm(false);
-    history.push('/');  };
+    history.push('/internship_portal');  };
 
 
   const handleMyApplication = () => {
@@ -242,22 +239,12 @@ const Home = () => {
     // history.push('/application_status/{loggedInUser}');
     history.push(`/application_status/${loggedinUserId}/${loggedInUser}`);
   };
-  const handleOtp = () => {
-  setShowOtp(true);
-  }
+  
   const handleHome = () => {
     setShowMyApplication(false);
     setShowRegistrationForm(false);
   }
- // const handleResumeUpload = (e) => {
-  //  const file = e.target.files[0];
-  //   if (file && file.type === 'application/pdf') {
-  //     setResumeUploaded(true);
-  //   } else {
-  //     alert('Please upload a PDF file.');
-  //   }
-  // };
-
+ 
   const handleApplyNowClick = (jobId) => {
     if (loggedinUserId) {
       setShowRegistrationForm(true);
@@ -384,8 +371,13 @@ console.log(search);
                         <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                       </span>
                     </div>
+                    
                     {loginErrors.password && <span className="error">{loginErrors.password}</span>}
                     {loginErrors && <span className="error">{loginErrors.error}</span>}
+                    <ReCAPTCHA
+                    sitekey="6LeooCUqAAAAAH0H6t4_fq6JkNZ7BpINBCDZTzpx"
+                    onChange={handleRecaptchaChange}
+                 />
                     <br />
                     <a href="#">Forgot password?</a>
                     <input type="submit" className="button" value="LogIn" />
@@ -419,14 +411,7 @@ console.log(search);
                     onChange={handleSignupChange} 
                     />
                     {signupErrors.first_name && <span className="error">{signupErrors.first_name}</span>}
-                    <input type="text" 
-                    name="email" 
-                    placeholder="Enter your email" 
-                    value={signupData.email} 
-                    onChange={handleSignupChange} 
-                    />
-                  {signupErrors.email && <span className="error">{signupErrors.email}</span>}
-                  <PhoneInput  
+                  {/* <PhoneInput  
                     type="number"
                     country={'IN'}
                     name="phone_number" 
@@ -437,30 +422,9 @@ console.log(search);
                       name: 'phone_number',
                       required: true,
                       autoFocus: true
-                    }}
-                      />
-                    {/* <OTPInput
-                       value={otp}
-                       onChange={setOtp}  
-                      OTPLength = {6}
-                      otpType = "number"
-                      disabled={false}
-                      autoFocus
-                      className="otp"
-                    ></OTPInput> */}
-                   {/* <input
-                   value={otp}
-                   onChange={setOtp}
-                    OTPLength = {6}
-                   otpType = "number"
-                   disabled={false}
-                   autoFocus
-                   className="otp"
-                   ></input>
-                   <button className='otp-btn'>
-                    <span>Verify OTP</span>
-                   </button> */}
-                  {/* {signupErrors.phone_number && <span className='error'>{signupErrors.phone_number}</span>} */}
+                      }}
+                      /> */}
+                   
                     <input type="text" 
                     name="username" 
                     placeholder="Username" 
@@ -481,17 +445,36 @@ console.log(search);
                       </span>
                     </div>
                     {signupErrors.password && <span className="error">{signupErrors.password}</span>}
-                    {signupErrors.general && <span className="error">{signupErrors.general}</span>}
-                    {/* <div id="sign-in-button"></div>
-                   
-                    <button className='otp-btn' onClick={sendOtp}>Send OTP</button>
-                    <input type="number"
-                    name='OTP'
-                    placeholder='Enter the OTP'
+                      <input type="text" 
+                      name="email" 
+                      placeholder="Enter your email" 
+                      value={signupData.email} 
+                      onChange={handleSignupChange} 
+                      />
+                    {signupErrors.email && <span className="error">{signupErrors.email}</span>}
+                    <button onClick={handleSendEmail}>Send Email</button>
+
+                    {/* {otpSent && (
+                    <div className="otpverify" style={{ display: 'flex' }}>
+                     <input
+                    type="text"
+                    value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    />
-                    <button className='otp-verify' onClick={verifyOtp}>Verify OTP</button>  */}
-                    <input type="submit" onClick={handleOtp} className="button" value="Signup" />
+                    placeholder="Enter the OTP sent to your Email"
+                    /> 
+                    <div> <button className="verify-otp" onClick={verifyOTP}>Verify OTP</button></div>
+                   </div>
+                   )}
+                   <button className="send-otp" onClick={sendOTP}>Send OTP</button> */}
+                   <ReCAPTCHA
+                sitekey="6LeooCUqAAAAAH0H6t4_fq6JkNZ7BpINBCDZTzpx"
+                onChange={handleRecaptchaChange}
+            />
+                    {signupErrors.general && <span className="error">{signupErrors.general}</span>}
+                 
+                    <input type="submit"
+                    className="button" value="Signup"  />
+                    {/* disabled={!otpSent || !isOtpVerified} */}
                   </form>
                   <div className="signup">
                     <span className="signup">Already have an account?
@@ -518,9 +501,9 @@ console.log(search);
          <Application_status  />
       )}
       
-      {showOtp &&(
+      {/* {showOtp &&(
         <Otp/>
-      )}
+      )} */}
       <div className="pagination">
         <button disabled={currentPage <= 1} className="btn" onClick={handlePrevClick}>Prev</button>
         <span>{currentPage} of {totalPages}</span>

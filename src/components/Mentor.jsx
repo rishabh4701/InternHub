@@ -15,6 +15,7 @@ const MentorPage = (props) => {
   const history = useHistory();
   console.log(username);
   console.log(i_id);
+
   useEffect(() => {
     fetchInternships();
   }, []);
@@ -24,11 +25,11 @@ const MentorPage = (props) => {
       const response = await fetch('http://127.0.0.1:8000/internships/');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
-      } 
+      }
       const data = await response.json();
       const sortedData = data.sort((a, b) => (a.Status === 'Open' ? -1 : 1));
-    setInternships(sortedData);
-    filterInternships(sortedData);
+      setInternships(sortedData);
+      filterInternships(sortedData);
     } catch (error) {
       console.error('Error fetching internships:', error);
     }
@@ -43,12 +44,12 @@ const MentorPage = (props) => {
     }
   };
 
-
   const handleEdit = (internshipId) => {
     setEditingInternshipId(internshipId);
   };
 
   const status = ['Open', 'Closed'];
+
   const handleSave = async (updatedInternship) => {
     try {
       const response = await fetch(`http://127.0.0.1:8000/internships/${updatedInternship.id}/`, {
@@ -116,13 +117,16 @@ const MentorPage = (props) => {
           onChange={handleChange}
         />
         <label>Status:</label>
-        <select 
-          type="text"
+        <select
           name="Status"
           value={updatedInternship.Status}
           onChange={handleChange}
-
-        />
+        >
+          <option value="" disabled>Status</option>
+          {status.map((statusValue, index) => (
+            <option key={index} value={statusValue}>{statusValue}</option>
+          ))}
+        </select>
         <label>Skills:</label>
         <input
           type="text"
@@ -130,13 +134,6 @@ const MentorPage = (props) => {
           value={updatedInternship.Skills}
           onChange={handleChange}
         />
-=======
-        >
-        <option value="" disabled>Status</option>
-        {status.map((status, internship) => (
-                  <option key={internship.id} value={status}>{status}</option>
-        ))}
-         </select>
         <div className="form-buttons">
           <button type="submit" className="save-button">Save</button>
           <button type="button" className="cancel-button" onClick={onCancel}>Cancel</button>
@@ -150,7 +147,8 @@ const MentorPage = (props) => {
     // localStorage.removeItem('authToken'); // Example if using localStorage for auth token
 
     // Redirect to Home page
-    history.push('');
+    history.push('/internship_portal');
+    window.location.reload();
   };
 
   const navigateToApplicationsPage = (id) => {
@@ -203,7 +201,6 @@ const MentorPage = (props) => {
       onSave(newInternship);
     };
 
-    
     return (
       <form className="add-form-container" onSubmit={handleSubmit}>
         <h3>Add New Internship</h3>
@@ -243,13 +240,16 @@ const MentorPage = (props) => {
           onChange={handleChange}
         />
         <label>Status:</label>
-        <select 
-          type="text"
+        <select
           name="Status"
           value={newInternship.Status}
           onChange={handleChange}
-
-        />
+        >
+          <option value="" disabled>Status</option>
+          {status.map((statusValue, index) => (
+            <option key={index} value={statusValue}>{statusValue}</option>
+          ))}
+        </select>
         <label>Skills:</label>
         <input
           type="text"
@@ -257,13 +257,6 @@ const MentorPage = (props) => {
           value={newInternship.Skills}
           onChange={handleChange}
         />
-        >
-        <option value="" disabled>Status</option>
-        {status.map((status, internship) => (
-                  <option key={internship.id} value={status}>{status}</option>
-        ))}
-         </select>
-
         <div className="form-buttons">
           <button type="submit" className="save-button">Add Internship</button>
           <button type="button" className="cancel-button" onClick={onCancel}>Cancel</button>
@@ -273,7 +266,6 @@ const MentorPage = (props) => {
   };
 
   return (
-    
     <div>
       <header>
         <div className="MNIT_name">
@@ -291,44 +283,40 @@ const MentorPage = (props) => {
           onCancel={() => setShowAddForm(false)}
         />
       )}
-      <div className={showAddForm ? "internships-list blurred" : "internships-list"}>
-        <div className='navbar2'>
-          <h1>Internships</h1>
-          <p className="username-display"><FontAwesomeIcon icon={faUser} /> {username}</p>
-          {/* <button className="logout-button" onClick={handleLogout}>Logout</button> */}
-          <button className="logout-button" onClick={handleLogout}>
-        <FontAwesomeIcon icon={faSignOutAlt} /> Logout
-      </button>
-        </div>
-        {filteredInternships.map(internship => (
-  <div className="mentoritem p-4 mb-4" key={internship.id}>
-    {editingInternshipId === internship.id ? (
-      <EditForm
-        internship={internship}
-        onSave={handleSave}
-        onCancel={handleCancelEdit}
-      />
-    ) : (
-      <>
-        <p className="status">Status: {internship.Status}</p>
-        <div className="details">
-          <h2>{internship.Title}</h2>
-          <p>Mentor: {internship.Mentor}</p>
-          <p>Duration: {internship.Duration}</p>
-        </div>
-        <div className="buttons">
-          <button className="button" onClick={() => handleEdit(internship.id)}>Edit</button>
-          <button className="button" onClick={() => navigateToApplicationsPage(internship.id)}>View Applications</button>
-        </div>
-              </>
-            )}
-          </div>
-        ))}
+      {filteredInternships.length === 0 ? (
+        <p>No internships available.</p>
+      ) : (
+        <ul>
+          {filteredInternships.map(internship => (
+            <li key={internship.id}>
+              <h3>{internship.Title}</h3>
+              <p>Mentor: {internship.Mentor}</p>
+              <p>Duration: {internship.Duration}</p>
+              <p>Status: {internship.Status}</p>
+              <p>Skills: {internship.Skills}</p>
+              {editingInternshipId === internship.id ? (
+                <EditForm
+                  internship={internship}
+                  onSave={handleSave}
+                  onCancel={handleCancelEdit}
+                />
+              ) : (
+                <>
+                  <button onClick={() => handleEdit(internship.id)}>Edit</button>
+                  <button onClick={() => navigateToApplicationsPage(internship.id)}>View Applications</button>
+                </>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="add-button-container">
+        <button onClick={() => setShowAddForm(true)}>Add Internship</button>
       </div>
-      <div className="add-internship-container">
-        {!showAddForm && (
-          <button className="add-internship-button" onClick={() => setShowAddForm(true)}>Add Internship</button>
-        )}
+      <div className="logout-container">
+        <button onClick={handleLogout} className="logout-button">
+          <FontAwesomeIcon icon={faSignOutAlt} /> Logout
+        </button>
       </div>
     </div>
   );

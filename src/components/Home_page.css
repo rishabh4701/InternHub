@@ -1,4 +1,22 @@
 /* home_page */
+.verify-otp {
+  border: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-top: 4px;
+  padding: 6px;
+}
+.send-otp {
+  border: none;
+  background-color: rgb(58, 58, 163);
+  color: white;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-top: 4px;
+  padding: 6px;
+}
 .applications {
   max-width: 700px;
   width: 100%;
@@ -121,9 +139,9 @@ body {
 small {
   font-size: medium;
 }
-.col-sm-12.col-md-4.d-flex.flex-column.align-items-start.align-items-md-end.justify-content-center {
-=======
- }
+/* .col-sm-12.col-md-4.d-flex.flex-column.align-items-start.align-items-md-end.justify-content-center {
+
+ } */
   .popup .close {
     position: absolute;
     top: 10px;
