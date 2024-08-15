@@ -1,43 +1,70 @@
-import React, { useState, useRef } from 'react';
-import firebase from './firbase_config';
-
+import React, { useState } from 'react';
+//import './emailotp.css';
+import emailjs from 'emailjs-com';
 
 const Otp = () => {
-  const [phoneNumber, setphoneNumber] = useState('');
-  const [verificationId, setVerificationId] = useState('');
-  const recaptchaRef = useRef(null);
+  const [email, setEmail] = useState('');
+  const [otp, setOtp] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState(null);
+  const [otpSent, setOtpSent] = useState(false);
 
-  const handleSendOtp = () => {
-    if (recaptchaRef.current) {
-      recaptchaRef.current.innerHTML = '<div id="recaptcha-container"></div>'
-    }
-    const verifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-size: 'invisible'
-    });
-    firebase.auth().signInWithPhoneNumber(phoneNumber, verifier)
-    .then(confirmationResult => {
-     setVerificationId(confirmationResult.verificationId);
-    })
-    .catch(error => {
-      console.error(error);
-    });
+  const sendOTP = () => {
+    let otp_val = Math.floor(Math.random() * 10000);
+    setGeneratedOtp(otp_val);
+
+    let emailBody = `<h2>Your OTP is </h2>${otp_val}`;
+
+    emailjs.send('service_elco1zp', 'template_gm3clqq', {
+        to_email: email,
+        otp: otp_val,
+        message: emailBody
+      }, 'LPYKBbs7hJvgaqLAY')
+      .then((response) => {
+        console.log('SUCCESS!', response.status, response.text);
+        alert("OTP sent to your email " + email);
+        setOtpSent(true);
+      })
+      .catch((err) => {
+        console.error('FAILED...', err);
+        alert("Failed to send OTP. Please try again.");
+      });
   };
 
-  return(
-<div>
-  <h3>OTP Verify</h3>
-  <div ref={recaptchaRef}></div>
-  <input type="tel"
-  placeholder='+911234567890'
-  value={phoneNumber}
-  onChange={ e => setphoneNumber(e.target.value)}
-   />
-   <button onClick={handleSendOtp}>Send OTP</button>
-</div>
+  const verifyOTP = () => {
+    if (otp == generatedOtp) {
+      alert("Email address verified...");
+    } else {
+      alert("Invalid OTP");
+    }
+  };
+
+  return (
+    <div className="form">
+      <h1>OTP Verification</h1>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Enter Email..."
+      />
+      {otpSent && (
+        <div className="otpverify" style={{ display: 'flex' }}>
+          <input
+            type="text"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            placeholder="Enter the OTP sent to your Email..."
+          />
+          <button className="btn" onClick={verifyOTP}>Verify OTP</button>
+        </div>
+      )}
+      <button className="btn" onClick={sendOTP}>Send OTP</button>
+    </div>
   );
-}
+};
+
 export default Otp;
-  
+
 
 // import React, { useState } from 'react';
 // import PhoneInput from 'react-phone-input-2';

@@ -70,6 +70,7 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
     }
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -269,6 +270,7 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
               />
               {resumeUploaded && <span className="upload-message">File has been uploaded</span>}
             </div>
+            
           </div>
           <div className="button">
             <input type="submit" value="Register" disabled={isSubmitting} />
