@@ -16,6 +16,7 @@ const MentorPage = (props) => {
   const navigate = useNavigate();
   console.log(username);
   console.log(i_id);
+
   useEffect(() => {
     fetchInternships();
   }, []);
@@ -25,11 +26,11 @@ const MentorPage = (props) => {
       const response = await fetch('http://127.0.0.1:8000/internships/');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
-      } 
+      }
       const data = await response.json();
       const sortedData = data.sort((a, b) => (a.Status === 'Open' ? -1 : 1));
-    setInternships(sortedData);
-    filterInternships(sortedData);
+      setInternships(sortedData);
+      filterInternships(sortedData);
     } catch (error) {
       console.error('Error fetching internships:', error);
     }
@@ -46,12 +47,12 @@ const MentorPage = (props) => {
     }
   };
 
-
   const handleEdit = (internshipId) => {
     setEditingInternshipId(internshipId);
   };
 
   const status = ['Open', 'Closed'];
+
   const handleSave = async (updatedInternship) => {
     try {
       const response = await fetch(`http://127.0.0.1:8000/internships/${updatedInternship.id}/`, {
@@ -124,8 +125,7 @@ const MentorPage = (props) => {
           onChange={handleChange}
         />
         <label>Status:</label>
-        <select 
-          type="text"
+        <select
           name="Status"
           value={updatedInternship.Status}
           onChange={handleChange}>
@@ -164,6 +164,7 @@ const MentorPage = (props) => {
 
     // Redirect to Home page
     navigate('/internship_portal');
+    window.location.reload();
   };
 
   const navigateToApplicationsPage = (id) => {
@@ -258,8 +259,7 @@ const MentorPage = (props) => {
           onChange={handleChange}
         />
         <label>Status:</label>
-        <select 
-          type="text"
+        <select
           name="Status"
           value={newInternship.Status}
           onChange={handleChange}
@@ -303,7 +303,6 @@ const MentorPage = (props) => {
   };
 
   return (
-    
     <div>
       <header>
         <div className="MNIT_name">
@@ -372,10 +371,10 @@ const MentorPage = (props) => {
         </div>
         ))}
       </div>
-      <div className="add-internship-container">
-        {!showAddForm && (
-          <button className="add-internship-button" onClick={() => setShowAddForm(true)}>Add Internship</button>
-        )}
+      <div className="logout-container">
+        <button onClick={handleLogout} className="logout-button">
+          <FontAwesomeIcon icon={faSignOutAlt} /> Logout
+        </button>
       </div>
     </div>
   );

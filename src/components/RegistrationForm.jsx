@@ -118,6 +118,7 @@ const RegistrationForm = ({ closeModal, userId, iId }) => {
     }
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -358,6 +359,7 @@ const RegistrationForm = ({ closeModal, userId, iId }) => {
                 required
               />
             </div>
+            
           </div>
           <div className="button">
             <input type="submit" value="Register" disabled={isSubmitting} />
