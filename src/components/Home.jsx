@@ -153,41 +153,46 @@ const Home = () => {
       return;
   }
     // Check if there are no validation errors
-    if (Object.keys(errors).length === 0) { // Ensure errors object is empty
-      axios.post('http://127.0.0.1:8000/auth/signup/', {...signupData, recaptchaToken: recaptchaToken})
-        .then(response => {
-          console.log('Signup response:', response.data);
-          alert('Signup successful! Please log in.');
-          setShowLoginModal(true);
-          setSignupData({ first_name: '', username: '', password: '', email: ''});
-          window.location.reload();
-        })
-        .catch(error => {
-          if (error.response && error.response.data) {
-            setSignupErrors(error.response.data);
-          } else {
-            setSignupErrors({ general: 'Signup error. Please try again.' });
-          }
-        });
-    }
+    
   };
 
   const handleSendEmail = () => {
+
     const emailData = {
         email: signupData.email,  // or any other email you want to send to
         subject: 'Welcome to Our Service!',
         message: `Dear ${signupData.first_name},\n\nThank you for signing up! We're excited to have you on board.\n\nBest regards,\nThe Team`
     };
 
-    axios.post('http://127.0.0.1:8000/auth/send-email/', emailData)
+    
+         // Ensure errors object is empty
+          axios.post('http://127.0.0.1:8000/auth/signup/', {...signupData, recaptchaToken: recaptchaToken})
+            .then(response => {
+              console.log('Signup response:', response.data);
+              // alert('Signup successful! Please log in.');
+              // setShowLoginModal(true);
+              setSignupData({ first_name: '', username: '', password: '', email: ''});
+              // window.location.reload();
+              axios.post('http://127.0.0.1:8000/auth/send-email/', emailData)
         .then(response => {
             console.log('Email sent response:', response.data);
             alert('Email sent successfully!');
+            setOtpSent(true);
+            setOtpData({ email: signupData.email });
         })
         .catch(error => {
             console.error('Error sending email:', error);
             alert('There was an error sending the email. Please try again.');
         });
+            })
+            .catch(error => {
+              if (error.response && error.response.data) {
+                setSignupErrors(error.response.data);
+              } else {
+                setSignupErrors({ general: 'Signup error. Please try again.' });
+              }
+            });
+        
 };
 
 
@@ -281,6 +286,59 @@ const Home = () => {
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
   const totalPages = Math.ceil(jobs.length / jobsPerPage);
+
+  const [otpSent, setOtpSent] = useState(false);
+const [isOtpVerified, setIsOtpVerified] = useState(false);
+const [otpData, setOtpData] = useState({ email: [], otp_verification: [] });
+const [otpErrors, setOtpErrors] = useState('');
+
+const handleOtpChange = (e) => {
+  setOtpData({ ...otpData, [e.target.name]: e.target.value });
+};
+
+
+
+const handleOtpVerification = async (e) => {
+  e.preventDefault();
+  try {
+    axios.post('http://127.0.0.1:8000/auth/verify-otp/', {otpData})
+    .then(response => {
+      setIsOtpVerified(true);
+      setOtpSent(false);
+      setShowSignupPage(false);
+      alert('Signup successful! Please log in.');
+      setShowLoginModal(true);
+    })
+    
+  } catch (error) {
+    setOtpErrors('Invalid OTP');
+  }
+};
+
+// // const verifyOtpAPI = async (e) => {
+// //   try {
+// //     // Perform the API call to verify the OTP
+// //     const response = await axios.post('http://127.0.0.1:8000/auth/verify-otp/', {otpData});
+// //     return response.data;
+// //   } catch (error) {
+// //     throw new Error(error.response?.data?.error || 'An error occurred while verifying OTP');
+// //   }
+// };
+
+const resendOtpAPI = async (email) => {
+  try {
+    const response = await axios.post('/api/resend-otp/', { email });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || 'An error occurred while resending OTP');
+  }
+};
+
+
+
+// Then use this function in your button
+
+
 console.log(search);
   return (
     <div>
@@ -423,120 +481,108 @@ console.log(search);
         </div>
       )}
 
-      {showSignupPage && !loggedInUser && (
-        <div className="modal-show-1" style={{ display: 'block' }}>
-          <div className="modal-dialog-1">
-            <div className="modal-content-1">
-              <div className="modal-body-1">
-                <button className="close" onClick={() => setShowSignupPage(false)}>&times;</button>
-                <div className={`registration form active`}>
-                  <header>Signup</header>
-                  <div id='recatcha-container'></div>
-                  <form onSubmit={handleSignup}>
-                    <input type="text" 
-                    name="first_name" 
-                    placeholder="Enter your first name"
-                    value={signupData.first_name} 
-                    onChange={handleSignupChange} 
-                    />
-                    {signupErrors.first_name && <span className="error">{signupErrors.first_name}</span>}
-                  {/* <PhoneInput  
-                    type="number"
-                    country={'IN'}
-                    name="phone_number" 
-                    placeholder="Enter your number" 
-                    value={signupData.phone_number} 
-                    onChange={(phone_number) => setSignupData("+" + phone_number)} 
-                    inputProps={{
-                      name: 'phone_number',
-                      required: true,
-                      autoFocus: true
-                    }}
-                      />
-                    {/* <OTPInput
-                       value={otp}
-                       onChange={setOtp}  
-                      OTPLength = {6}
-                      otpType = "number"
-                      disabled={false}
-                      autoFocus
-                      className="otp"
-                    ></OTPInput> */}
-                   {/* <input
-                   value={otp}
-                   onChange={setOtp}
-                    OTPLength = {6}
-                   otpType = "number"
-                   disabled={false}
-                   autoFocus
-                   className="otp"
-                   ></input>
-                   <button className='otp-btn'>
-                    <span>Verify OTP</span>
-                   </button> */}
-                  {/* {signupErrors.phone_number && <span className='error'>{signupErrors.phone_number}</span>} */}
-                    <input type="text" 
-                    name="username" 
-                    placeholder="Username" 
-                    value={signupData.username} 
-                    onChange={handleSignupChange} 
-                    />
-                    {signupErrors.username && <span className="error">{signupErrors.username}</span>}
-                    <div className="password-wrapper">
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        name="password"
-                        placeholder="Password"
-                        value={signupData.password}
-                        onChange={handleSignupChange}
-                      />
-                      <span className="password-toggle-icon" onClick={() => setShowPassword(!showPassword)}>
-                        <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-                      </span>
-                    </div>
-                    {signupErrors.password && <span className="error">{signupErrors.password}</span>}
-                      <input type="text" 
-                      name="email" 
-                      placeholder="Enter your email" 
-                      value={signupData.email} 
-                      onChange={handleSignupChange} 
-                      />
-                    {signupErrors.email && <span className="error">{signupErrors.email}</span>}
-                    <button onClick={handleSendEmail}>Send Email</button>
-
-                    {/* {otpSent && (
-                    <div className="otpverify" style={{ display: 'flex' }}>
-                     <input
-                    type="text"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    placeholder="Enter the OTP sent to your Email"
-                    /> 
-                    <div> <button className="verify-otp" onClick={verifyOTP}>Verify OTP</button></div>
-                   </div>
-                   )}
-                   <button className="send-otp" onClick={sendOTP}>Send OTP</button> */}
-                   <ReCAPTCHA
-                sitekey="6LeooCUqAAAAAH0H6t4_fq6JkNZ7BpINBCDZTzpx"
-                onChange={handleRecaptchaChange}
-            />
-                    {signupErrors.general && <span className="error">{signupErrors.general}</span>}
-                 
-                    <input type="submit"
-                    className="button" value="Signup"  />
-                    {/* disabled={!otpSent || !isOtpVerified} */}
-                  </form>
-                  <div className="signup">
-                    <span className="signup">Already have an account?
-                      <label htmlFor="click" onClick={() => setShowSignupPage(false)}>Login</label>
-                    </span>
-                  </div>
+{showSignupPage && !loggedInUser && (
+  <div className="modal-show-1" style={{ display: 'block' }}>
+    <div className="modal-dialog-1">
+      <div className="modal-content-1">
+        <div className="modal-body-1">
+          {!otpSent ? (
+            <>
+            <button className="close" onClick={() => setShowSignupPage(false)}>&times;</button>
+            <div className={`registration form active`}>
+              <header>Signup</header>
+              <div id='recaptcha-container'></div>
+              <form onSubmit={handleSignup}>
+                <input
+                  type="text"
+                  name="first_name"
+                  placeholder="Enter your first name"
+                  value={signupData.first_name}
+                  onChange={handleSignupChange}
+                />
+                {signupErrors.first_name && <span className="error">{signupErrors.first_name}</span>}
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="Username"
+                  value={signupData.username}
+                  onChange={handleSignupChange}
+                />
+                {signupErrors.username && <span className="error">{signupErrors.username}</span>}
+                <div className="password-wrapper">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    placeholder="Password"
+                    value={signupData.password}
+                    onChange={handleSignupChange}
+                  />
+                  <span className="password-toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                    <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                  </span>
                 </div>
+                {signupErrors.password && <span className="error">{signupErrors.password}</span>}
+                <input
+                  type="text"
+                  name="email"
+                  placeholder="Enter your email"
+                  value={signupData.email}
+                  onChange={handleSignupChange}
+                />
+                {signupErrors.email && <span className="error">{signupErrors.email}</span>}
+                
+                {/* Send Email Button to Trigger OTP */}
+                <button type="submit" className='button' onClick={handleSendEmail}>Send OTP</button>
+                {otpErrors && <span className="error">{otpErrors}</span>}
+
+                <ReCAPTCHA
+                  sitekey="6LeooCUqAAAAAH0H6t4_fq6JkNZ7BpINBCDZTzpx"
+                  onChange={handleRecaptchaChange}
+                />
+                {signupErrors.general && <span className="error">{signupErrors.general}</span>}
+                
+                {/* <input
+                  type="submit"
+                  className="button"
+                  value="Signup"
+                  disabled={!otpSent || !isOtpVerified}
+                /> */}
+              </form>
+              <div className="signup">
+                <span className="signup">Already have an account?
+                  <label htmlFor="click" onClick={() => setShowSignupPage(false)}>Login</label>
+                </span>
               </div>
             </div>
-          </div>
+            </>
+          ) : (
+            <div className={`otp-verification form active`}>
+              <header>OTP Verification</header>
+              <form onSubmit={handleOtpVerification}>
+                <input
+                  type="text"
+                  name="otp_verification"
+                  placeholder="Enter your OTP"
+                  value={otpData.otp_verification}
+                  onChange={handleOtpChange}
+                />
+                {otpErrors.otp && <span className="error">{otpErrors.otp}</span>}
+                {otpErrors.error && <span className="error">{otpErrors.error}</span>}
+                <input type="submit" className="button" value="Verify OTP" />
+                {/* <div className="resend-otp">
+                  <span>Didn't receive an OTP?
+                    <label onClick={resendOtp}>Resend OTP</label>
+                  </span>
+                </div> */}
+              </form>
+            </div>
+          )}
         </div>
-      )}
+      </div>
+    </div>
+  </div>
+)}
+
 
       {showRegistrationForm && loggedInUser && (
         <RegistrationForm closeModal={() => setShowRegistrationForm(false)} 
@@ -551,9 +597,9 @@ console.log(search);
          <Application_status  />
       )}
       
-      {showOtp &&(
+      {/* {showOtp &&(
         <Otp/>
-      )} 
+      )}  */}
       <div className="pagination">
         <button disabled={currentPage <= 1} className="btn" onClick={handlePrevClick}>Prev</button>
         <span>{currentPage} of {totalPages}</span>
