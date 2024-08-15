@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserAlt, faCalendarAlt, faEye, faEyeSlash, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUserAlt, faCalendarAlt, faEye, faEyeSlash, faSignOutAlt, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import './Home_page.css';
 import logo from './images/Mnit_logo.png';
@@ -27,6 +27,7 @@ const Home = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loggedinUserId, setloggedinUserId] = useState(null);
   const [loggedInUser, setLoggedInUser] = useState();
+  const [selectedInternship, setSelectedInternship] = useState(null);
   const [showSignupPage, setShowSignupPage] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
@@ -41,7 +42,7 @@ const Home = () => {
   const [i_id, seti_id] = useState(null);
 
   const [token, setToken] = useState('');
-=======
+
   const [showOtp, setShowOtp] = useState('');
   //const [phone, setPhone] = useState("");
   // const [otp, setOtp] = useState("");
@@ -50,7 +51,7 @@ const Home = () => {
   const loggedIn = window.localStorage.getItem("isLoggedIn");
   console.log(loggedIn, "login");
   console.log(loggedInUser);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchInternships();
@@ -97,8 +98,6 @@ const Home = () => {
     if (!signupData.email) errors.email = 'Email is required';
     if (!signupData.username) errors.username = 'Username is required';
     if (!signupData.password) errors.password = 'Password is required';
-
-    if (!signupData.phone_number) errors.phone_number = 'Phone Number is required';
     return errors; 
  
   };
@@ -118,11 +117,11 @@ const Home = () => {
           window.localStorage.setItem("isLoggedIn", true);
           if (response.data.status === 'staff') {
             alert("Log in as mentor");
-            history.push(`/mentor/${response.data.user_id}/${response.data.username}`);
+            navigate(`/mentor/${response.data.user_id}/${response.data.username}`);
           }else if(response.data.status === 'superuser') {
             alert("Log in as Admin ");
             setToken(response.data.access);
-            history.push(`/admin/${response.data.user_id}/${response.data.username}/${response.data.access}`);
+            navigate(`/admin/${response.data.user_id}/${response.data.username}/${response.data.access}`);
           } 
           else {
             setLoggedInUser(response.data.username);
@@ -153,7 +152,7 @@ const Home = () => {
           console.log('Signup response:', response.data);
           alert('Signup successful! Please log in.');
           setShowLoginModal(true);
-          setSignupData({ first_name: '', email: '', username: '', password: '', phone_number: '' });
+          setSignupData({ first_name: '', email: '', username: '', password: ''});
         })
         .catch(error => {
           if (error.response && error.response.data) {
@@ -233,14 +232,14 @@ const Home = () => {
     window.localStorage.setItem("isLoggedIn", false);
     setShowMyApplication(false);
     setShowRegistrationForm(false);
-    history.push('/');  };
+    navigate('/internship_portal');  };
 
 
   const handleMyApplication = () => {
     setShowMyApplication(true);
     setShowRegistrationForm(false);
     // history.push('/application_status/{loggedInUser}');
-    history.push(`/application_status/${loggedinUserId}/${loggedInUser}`);
+    navigate(`/application_status/${loggedinUserId}/${loggedInUser}`);
   };
   const handleOtp = () => {
   setShowOtp(true);
@@ -267,12 +266,26 @@ const Home = () => {
     }
   };
 
+  const handleShowDetails = (jobId) => {
+    console.log("hi");
+    console.log(jobId);
+    const job = jobs.find(job => job.id === parseInt(jobId));
+    setSelectedInternship(job);
+    console.log(selectedInternship);
+  };
+
+  const handleCloseDetails = () => {
+    setSelectedInternship(null);
+  };
+
   const handlePrevClick = () => {
     setCurrentPage(prevPage => Math.max(prevPage - 1, 1));
+    setSelectedInternship(null);
   };
 
   const handleNextClick = () => {
     setCurrentPage(prevPage => Math.min(prevPage + 1, Math.ceil(jobs.length / jobsPerPage)));
+    setSelectedInternship(null);
   };
 
   const indexOfLastJob = currentPage * jobsPerPage;
@@ -297,12 +310,12 @@ console.log(search);
       <ul className="navbar-left">
         <li><a className="home" onClick={handleHome}>Home</a></li>
         {loggedInUser && (
-          <li><Link className="myapplication" to="#" onClick={handleMyApplication}>My Applications</Link></li>
+          <li className="myapplication" onClick={handleMyApplication}>My Applications</li>
         )}
-         <li><nav class="search-job">
-     <div class="search-bar">
-     <form class="search" role="search">
-     <input class="search-box" type="search" onChange={(e) => setSearch(e.target.value)} placeholder="Search Internships" aria-label="Search" />
+         <li><nav className="search-job">
+     <div className="search-bar">
+     <form className="search" role="search">
+     <input className="search-box" type="search" onChange={(e) => setSearch(e.target.value)} placeholder="Search Internships" aria-label="Search" />
      {/* <button class="btn btn-outline-success" type="submit">Search</button> */}
     </form>
   </div>
@@ -332,8 +345,11 @@ console.log(search);
               <div key={index} className="job-item p-4 mb-4" onClick={() => setSelectedJob(job)}>
                 <div className="job-container">
                   <p className="job-status">Status: {job.Status}</p>
+                  {/* <button className='job-details' onClick={() => handleShowDetails(job.id)}>i</button> */}
+                  
                   <div className="job-title-container">
                     <h2 className="job-title">{job.Title}</h2>  
+                    <button className="job-details" onClick={() => handleShowDetails(job.id)}><FontAwesomeIcon icon={faInfoCircle} /></button>
                   </div>
                   <span className="job-mentor">
                       <FontAwesomeIcon icon={faUserAlt} className="text-primary me-2" /> {job.Mentor}
@@ -342,24 +358,35 @@ console.log(search);
                     <button className="btn btn-primary" onClick={() => handleApplyNowClick(job.id)}>Apply Now</button>
                     <small className="job-duration">
                       <FontAwesomeIcon icon={faCalendarAlt} className="text-primary me-2" /> Duration: {job.Duration}
+                      <p className='skills'>Skills Required: {job.Skills}</p>
                     </small>
                   </div>
                 </div>
               </div>
             ))}
           </div>
+          <div className="pagination">
+        <button disabled={currentPage <= 1} className="btn" onClick={handlePrevClick}>Prev</button>
+        <span>{currentPage} of {totalPages}</span>
+        <button disabled={currentPage >= totalPages} className="btn" onClick={handleNextClick}>Next</button>
+      </div>
+          {selectedInternship && (
+          <div className="details-card">
+            <h2>Internship Details</h2>
+            <p><strong>Title:</strong> {selectedInternship.Title}</p>
+            <p><strong>Mentor:</strong> {selectedInternship.Mentor}</p>
+            <p><strong>Description:</strong> {selectedInternship.Description}</p>
+            <p><strong>Duration:</strong> {selectedInternship.Duration}</p>
+            <p><strong>Stipend:</strong> {selectedInternship.Stipend}</p>
+            <p><strong>Internship Status:</strong> {selectedInternship.Status}</p>
+            <p><strong>Skills Required:</strong> {selectedInternship.Skills}</p>
+            <button onClick={handleCloseDetails}>Close</button>
+          </div>
+        )}
         </div>
       )}
 
-      {selectedJob && (
-        <div id="job-popup" className={`popup ${selectedJob ? 'active' : ''}`}>
-          <div className="popup-content">
-            <span className="close" onClick={() => setSelectedJob(null)}>&times;</span>
-            <h2 id="job-Title">{selectedJob.Title}</h2>
-            <p id="job-description">{selectedJob.description}</p>
-          </div>
-        </div>
-      )}
+      
 
       {showLoginModal && !loggedInUser && (
         <div className="modal-show-1" style={{ display: 'block' }}>
@@ -426,7 +453,7 @@ console.log(search);
                     onChange={handleSignupChange} 
                     />
                   {signupErrors.email && <span className="error">{signupErrors.email}</span>}
-                  <PhoneInput  
+                  {/* <PhoneInput  
                     type="number"
                     country={'IN'}
                     name="phone_number" 
@@ -438,7 +465,7 @@ console.log(search);
                       required: true,
                       autoFocus: true
                     }}
-                      />
+                      /> */}
                     {/* <OTPInput
                        value={otp}
                        onChange={setOtp}  
@@ -491,7 +518,7 @@ console.log(search);
                     onChange={(e) => setOtp(e.target.value)}
                     />
                     <button className='otp-verify' onClick={verifyOtp}>Verify OTP</button>  */}
-                    <input type="submit" onClick={handleOtp} className="button" value="Signup" />
+                    <input type="submit" className="button" value="Signup" />
                   </form>
                   <div className="signup">
                     <span className="signup">Already have an account?
@@ -521,11 +548,7 @@ console.log(search);
       {showOtp &&(
         <Otp/>
       )}
-      <div className="pagination">
-        <button disabled={currentPage <= 1} className="btn" onClick={handlePrevClick}>Prev</button>
-        <span>{currentPage} of {totalPages}</span>
-        <button disabled={currentPage >= totalPages} className="btn" onClick={handleNextClick}>Next</button>
-      </div>
+      
       
     </div>
   );

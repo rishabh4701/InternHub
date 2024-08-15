@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './Mentor.css';
 import logo from './images/Mnit_logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 const MentorPage = (props) => {
   const [internships, setInternships] = useState([]);
+  const [selectedInternship, setSelectedInternship] = useState(null);
   const [filteredInternships, setFilteredInternships] = useState([]);
   const [editingInternshipId, setEditingInternshipId] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const { userId, username, i_id } = useParams(); // Destructure params from useParams hook
-  const history = useHistory();
+  const navigate = useNavigate();
   console.log(username);
   console.log(i_id);
   useEffect(() => {
@@ -36,7 +37,9 @@ const MentorPage = (props) => {
 
   const filterInternships = (internshipsData) => {
     if (userId) {
-      const filtered = internshipsData.filter(internship => internship.user_id === userId);
+      const filtered = internshipsData.filter(internship => 
+        internship.user_id === userId && internship.username === username
+      );
       setFilteredInternships(filtered);
     } else {
       setFilteredInternships(internshipsData);
@@ -76,7 +79,11 @@ const MentorPage = (props) => {
   };
 
   const EditForm = ({ internship, onSave, onCancel }) => {
-    const [updatedInternship, setUpdatedInternship] = useState(internship);
+    const [updatedInternship, setUpdatedInternship] = useState({
+      ...internship,
+      // Skills: internship.Skills.join(', '), // Convert Skills array to a comma-separated string
+    });
+  
 
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -92,6 +99,7 @@ const MentorPage = (props) => {
     };
 
     return (
+      <>
       <form className="edit-form-container" onSubmit={handleSubmit}>
         <h3>Edit Internship</h3>
         <label>Title:</label>
@@ -120,28 +128,33 @@ const MentorPage = (props) => {
           type="text"
           name="Status"
           value={updatedInternship.Status}
-          onChange={handleChange}
-
-        />
-        <label>Skills:</label>
-        <input
-          type="text"
-          name="Skills"
-          value={updatedInternship.Skills}
-          onChange={handleChange}
-        />
-=======
-        >
-        <option value="" disabled>Status</option>
+          onChange={handleChange}>
+            <option value="" disabled>Status</option>
         {status.map((status, internship) => (
                   <option key={internship.id} value={status}>{status}</option>
         ))}
-         </select>
+          </select>
+
+        
+        <label>Skills:</label>
+        <input
+        type="text"
+        name="Skills"
+        value={updatedInternship.Skills}
+        onChange={handleChange}
+        placeholder="e.g., JavaScript, Python, React"
+      />
+        
+
+        
+        
+         
         <div className="form-buttons">
           <button type="submit" className="save-button">Save</button>
           <button type="button" className="cancel-button" onClick={onCancel}>Cancel</button>
         </div>
       </form>
+      </>
     );
   };
 
@@ -150,11 +163,11 @@ const MentorPage = (props) => {
     // localStorage.removeItem('authToken'); // Example if using localStorage for auth token
 
     // Redirect to Home page
-    history.push('');
+    navigate('/internship_portal');
   };
 
   const navigateToApplicationsPage = (id) => {
-    history.push(`/applications/${username}/${id}`);
+    navigate(`/applications/${username}/${id}`);
   };
 
   const handleAdd = async (newInternship) => {
@@ -202,9 +215,11 @@ const MentorPage = (props) => {
       e.preventDefault();
       onSave(newInternship);
     };
+  
 
     
     return (
+      <>
       <form className="add-form-container" onSubmit={handleSubmit}>
         <h3>Add New Internship</h3>
         <label>Title:</label>
@@ -248,28 +263,43 @@ const MentorPage = (props) => {
           name="Status"
           value={newInternship.Status}
           onChange={handleChange}
-
-        />
-        <label>Skills:</label>
-        <input
-          type="text"
-          name="Skills"
-          value={newInternship.Skills}
-          onChange={handleChange}
-        />
-        >
-        <option value="" disabled>Status</option>
+          >
+          <option value="" disabled>Status</option>
         {status.map((status, internship) => (
                   <option key={internship.id} value={status}>{status}</option>
         ))}
-         </select>
+        </select  >
+        <label>Skills (comma-separated):</label>
+      <input
+        type="text"
+        name="Skills"
+        value={newInternship.Skills}
+        onChange={handleChange}
+        placeholder="e.g., JavaScript, Python, React"
+      />
+        
+        
+         
 
         <div className="form-buttons">
           <button type="submit" className="save-button">Add Internship</button>
           <button type="button" className="cancel-button" onClick={onCancel}>Cancel</button>
         </div>
       </form>
+      </>
     );
+  };
+
+  const handleShowDetails = (jobId) => {
+    console.log("hi");
+    console.log(jobId);
+    const job = internships.find(job => job.id === parseInt(jobId));
+    setSelectedInternship(job);
+    console.log(selectedInternship);
+  };
+
+  const handleCloseDetails = () => {
+    setSelectedInternship(null);
   };
 
   return (
@@ -297,32 +327,49 @@ const MentorPage = (props) => {
           <p className="username-display"><FontAwesomeIcon icon={faUser} /> {username}</p>
           {/* <button className="logout-button" onClick={handleLogout}>Logout</button> */}
           <button className="logout-button" onClick={handleLogout}>
-        <FontAwesomeIcon icon={faSignOutAlt} /> Logout
-      </button>
+            <FontAwesomeIcon icon={faSignOutAlt} /> Logout
+          </button>
         </div>
         {filteredInternships.map(internship => (
-  <div className="mentoritem p-4 mb-4" key={internship.id}>
-    {editingInternshipId === internship.id ? (
-      <EditForm
+        <div className="mentoritem p-4 mb-4" key={internship.id}>
+        {editingInternshipId === internship.id ? (
+        <EditForm
         internship={internship}
         onSave={handleSave}
         onCancel={handleCancelEdit}
-      />
-    ) : (
-      <>
+        />
+        ) : (
+        <>
         <p className="status">Status: {internship.Status}</p>
         <div className="details">
-          <h2>{internship.Title}</h2>
+          <div className="job-title-container">
+            <h2 className="job-title">{internship.Title}</h2>  
+            <button className="job-details" onClick={() => handleShowDetails(internship.id)}><FontAwesomeIcon icon={faInfoCircle} /></button>
+          </div>
           <p>Mentor: {internship.Mentor}</p>
           <p>Duration: {internship.Duration}</p>
-        </div>
-        <div className="buttons">
+          <p>Skills Required: {internship.Skills}</p>
+          </div>
+          <div className="buttons">
           <button className="button" onClick={() => handleEdit(internship.id)}>Edit</button>
           <button className="button" onClick={() => navigateToApplicationsPage(internship.id)}>View Applications</button>
-        </div>
+          </div>
               </>
             )}
+            {selectedInternship && (
+          <div className="details-card">
+            <h2>Internship Details</h2>
+            <p><strong>Title:</strong> {selectedInternship.Title}</p>
+            <p><strong>Mentor:</strong> {selectedInternship.Mentor}</p>
+            <p><strong>Description:</strong> {selectedInternship.Description}</p>
+            <p><strong>Duration:</strong> {selectedInternship.Duration}</p>
+            <p><strong>Stipend:</strong> {selectedInternship.Stipend}</p>
+            <p><strong>Internship Status:</strong> {selectedInternship.Status}</p>
+            <p><strong>Skills Required:</strong> {selectedInternship.Skills}</p>
+            <button onClick={handleCloseDetails}>Close</button>
           </div>
+        )}
+        </div>
         ))}
       </div>
       <div className="add-internship-container">

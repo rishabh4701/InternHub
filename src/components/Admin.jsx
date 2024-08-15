@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import Users from './Users';
 import './Application_status.css';
 import logo from './images/Mnit_logo.png';
@@ -20,12 +20,12 @@ const AdminPage = () => {
     const indexOfLastJob = currentPage * jobsPerPage;
     const indexOfFirstJob = indexOfLastJob - jobsPerPage;
     const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [search, setSearch] = useState('');
 
 
     const handleLogout = () => {
-        history.push('/');
+        navigate('/internship_portal');
       };
     console.log(username);
 
@@ -53,7 +53,7 @@ const AdminPage = () => {
       };
 
       const navigateToApplicationsPage = (id) => {
-        history.push(`/applications/${username}/${id}`);
+        navigate(`/applications/${username}/${id}`);
       };
 
       const handleAdd = async (newInternship) => {
@@ -104,7 +104,7 @@ const AdminPage = () => {
       };
 
       const navigateToUsers = () => {
-        history.push(`/users/${token}`);
+        navigate(`/users/${token}`);
       };
 
       const AddForm = ({ onSave, onCancel }) => {
@@ -266,9 +266,9 @@ const AdminPage = () => {
       </header>
       <nav className="navbar3">
         <div className="navbar-left">
-          <Link className="home" to="/">Home</Link>
+          <Link className="home" to="/internship_portal">Home</Link>
           {/* <Link className="user" to="/user">User</Link> */}
-          <li className="users" onClick={navigateToUsers}>Users</li>
+          {/* <li className="users" onClick={navigateToUsers}>Users</li> */}
           
         </div>
         <div className="navbar-right">
@@ -302,6 +302,7 @@ const AdminPage = () => {
           <h2>{internship.Title}</h2>
           <p>Mentor: {internship.Mentor}</p>
           <p>Duration: {internship.Duration}</p>
+          <p>Skills Required: {internship.Skills}</p>
         </div>
         <div className="buttons">
           <button className="button" onClick={() => handleEdit(internship.id)}>Edit</button>

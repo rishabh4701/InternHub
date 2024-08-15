@@ -121,9 +121,12 @@ body {
 small {
   font-size: medium;
 }
-.col-sm-12.col-md-4.d-flex.flex-column.align-items-start.align-items-md-end.justify-content-center {
-=======
- }
+/* .col-sm-12.col-md-4.d-flex.flex-column.align-items-start.align-items-md-end.justify-content-center {
+
+ } */
+.skills{
+  margin-top: 14px;
+}
   .popup .close {
     position: absolute;
     top: 10px;
@@ -289,7 +292,7 @@ body {
 }
 /* form validation */
 .modal-show-1 {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -558,6 +561,11 @@ form .button input:hover {
 .job-actions .btn-primary {
   margin-right: 20px; /* Space between button and duration */
 }
+.job-details {
+  margin-left: 10px;
+  border: white;
+  background-color: white;
+}
 
 .job-item .job-status {
   position: absolute;
@@ -568,6 +576,7 @@ form .button input:hover {
   padding: 5px 10px;
   border-radius: 5px;
 }
+
 
 /* Ensure job-item is relatively positioned to contain the absolute positioning */
 .job-item {
