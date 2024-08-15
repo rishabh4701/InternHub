@@ -73,7 +73,7 @@ const ApplicationStatus = () => {
 
   return (
     <>
-      <header>
+      {/* <header>
         <div className="MNIT_name">
           <img src={logo} alt="MNIT logo" />
           <h1>
@@ -82,6 +82,9 @@ const ApplicationStatus = () => {
             Malaviya National Institute of Technology Jaipur (An Institute of National Importance)
           </h1>
         </div>
+      </header> */}
+      <header>
+        <h1>Internship Web Portal</h1>
       </header>
       <nav className="navbar3">
         <div className="navbar-left">

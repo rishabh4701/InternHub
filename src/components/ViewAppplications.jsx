@@ -109,7 +109,7 @@ const ViewApplicationsPage = () => {
 
   return (
     <div>
-      <header>
+      {/* <header>
         <div className="MNIT_name">
           <img src={logo} alt="MNIT logo" />
           <h1>
@@ -118,6 +118,9 @@ const ViewApplicationsPage = () => {
             Malaviya National Institute of Technology Jaipur (An Institute of National Importance)
           </h1>
         </div>
+      </header> */}
+      <header>
+        <h1>Internship Web Portal</h1>
       </header>
       <nav className="navbar3">
         <div className="navbar-left">
@@ -131,7 +134,7 @@ const ViewApplicationsPage = () => {
           </button>
         </div>
       </nav>
-      <h3>Applications for Internship {internshipId}</h3>
+      <h3>Applications for Internship</h3>
       <div className='colomn'>
         <button className={`colomn-1 ${filter === 'all' ? 'active' : ''}`} onClick={() => handleFilterChange("all")}>All Applications</button>
         <button className={`colomn-2 ${filter === 'shortlisted' ? 'active' : ''}`} onClick={() => handleFilterChange("shortlisted")}>Shortlisted</button>

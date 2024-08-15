@@ -342,7 +342,7 @@ const resendOtpAPI = async (email) => {
 console.log(search);
   return (
     <div>
-      <header>
+      {/* <header>
         <div className="MNIT_name">
           <img src={logo} alt="MNIT logo" />
           <h1>
@@ -351,6 +351,9 @@ console.log(search);
             Malaviya National Institute of Technology Jaipur (An Institute of National Importance)
           </h1>
         </div>
+      </header> */}
+      <header>
+        <h1>Internship Web Portal</h1>
       </header>
 
       <nav className="navbar">
@@ -396,7 +399,10 @@ console.log(search);
                   
                   <div className="job-title-container">
                     <h2 className="job-title">{job.Title}</h2>  
-                    <button className="job-details" onClick={() => handleShowDetails(job.id)}><FontAwesomeIcon icon={faInfoCircle} /></button>
+                    <button className="job-details" onClick={() => handleShowDetails(job.id)}>
+                      <FontAwesomeIcon icon={faInfoCircle} />
+                      <span className="tooltip-text">Show Details</span>
+                    </button>
                   </div>
                   <span className="job-mentor">
                       <FontAwesomeIcon icon={faUserAlt} className="text-primary me-2" /> {job.Mentor}
@@ -600,11 +606,11 @@ console.log(search);
       {/* {showOtp &&(
         <Otp/>
       )}  */}
-      <div className="pagination">
+      {/* <div className="pagination">
         <button disabled={currentPage <= 1} className="btn" onClick={handlePrevClick}>Prev</button>
         <span>{currentPage} of {totalPages}</span>
         <button disabled={currentPage >= totalPages} className="btn" onClick={handleNextClick}>Next</button>
-      </div>
+      </div> */}
       
     </div>
   );
