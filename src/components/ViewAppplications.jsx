@@ -4,6 +4,8 @@ import './ViewApplication.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt, faUser, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import logo from './images/Mnit_logo.png';
+import * as XLSX from 'xlsx'; // Import the xlsx library
+import ApplicationStatus from './Application_status';
 
 const ViewApplicationsPage = () => {
   const {internshipId, username } = useParams();
@@ -13,6 +15,7 @@ const ViewApplicationsPage = () => {
   const [editingStatus, setEditingStatus] = useState(null);
   const [newStatus, setNewStatus] = useState("");
   const [filter, setFilter] = useState("all");
+  
 
   const navigate = useNavigate();
 
@@ -107,6 +110,18 @@ const ViewApplicationsPage = () => {
     setSelectedApplication(null);
   };
 
+  const handleExportToExcel = () => {
+
+    const filteredApplications = applications.map(({ id, i_id, user_id, ...rest }) => rest);
+
+    const worksheet = XLSX.utils.json_to_sheet(filteredApplications);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Applications');
+
+    // Trigger a download of the Excel file
+    XLSX.writeFile(workbook, 'Applications.xlsx');
+  };
+
   return (
     <div>
       {/* <header>
@@ -135,6 +150,8 @@ const ViewApplicationsPage = () => {
         </div>
       </nav>
       <h3>Applications for Internship</h3>
+      
+      {/* <button onClick={handleExportToExcel} className="download-button">Download Excel</button> */}
       <div className='colomn'>
         <button className={`colomn-1 ${filter === 'all' ? 'active' : ''}`} onClick={() => handleFilterChange("all")}>All Applications</button>
         <button className={`colomn-2 ${filter === 'shortlisted' ? 'active' : ''}`} onClick={() => handleFilterChange("shortlisted")}>Shortlisted</button>
@@ -203,6 +220,11 @@ const ViewApplicationsPage = () => {
         ) : (
           <p>No applications found for this internship.</p>
         )}
+      </div>
+      <div className="add-internship-container">
+        
+        <button className="add-internship-button" onClick={handleExportToExcel}>Download Excel</button>
+        
       </div>
     </div>
   );
