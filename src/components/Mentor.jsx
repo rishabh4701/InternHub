@@ -202,6 +202,7 @@ const MentorPage = (props) => {
       Description: '',
       Skills:'',
       user_id: userId, // Assuming new internships will have the same user_id
+      username: username,
     });
 
     const handleChange = (e) => {
@@ -277,14 +278,10 @@ const MentorPage = (props) => {
         onChange={handleChange}
         placeholder="e.g., JavaScript, Python, React"
       />
-        
-        
-         
-
-        <div className="form-buttons">
-          <button type="submit" className="save-button">Add Internship</button>
-          <button type="button" className="cancel-button" onClick={onCancel}>Cancel</button>
-        </div>
+      <div className="form-buttons">
+        <button type="submit" className="save-button">Add Internship</button>
+        <button type="button" className="cancel-button" onClick={onCancel}>Cancel</button>
+      </div>
       </form>
       </>
     );
@@ -304,7 +301,7 @@ const MentorPage = (props) => {
 
   return (
     <div>
-      <header>
+      {/* <header>
         <div className="MNIT_name">
           <img src={logo} alt="MNIT logo" />
           <h1>
@@ -313,6 +310,9 @@ const MentorPage = (props) => {
             Malaviya National Institute of Technology Jaipur (An Institute of National Importance)
           </h1>
         </div>
+      </header> */}
+      <header>
+        <h1>Internship Web Portal</h1>
       </header>
       {showAddForm && (
         <AddForm
@@ -371,10 +371,10 @@ const MentorPage = (props) => {
         </div>
         ))}
       </div>
-      <div className="logout-container">
-        <button onClick={handleLogout} className="logout-button">
-          <FontAwesomeIcon icon={faSignOutAlt} /> Logout
-        </button>
+      <div className="add-internship-container">
+        {!showAddForm && (
+          <button className="add-internship-button" onClick={() => setShowAddForm(true)}>Add Internship</button>
+        )}
       </div>
     </div>
   );

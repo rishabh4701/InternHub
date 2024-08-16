@@ -109,13 +109,13 @@
   padding-left: 5px;
   border: 2px solid black;
 }
-.add-internship-container {
+.add-internship-container{
   margin: 20px 0;
   display: flex;
   justify-content: center;
 }
 
-.add-internship-button {
+.add-internship-button{
   padding: 10px 20px;
   background-color: blue;
   color: white;
