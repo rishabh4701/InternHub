@@ -17,6 +17,7 @@ from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
 
+    # phone_number = models.CharField(max_length=15, blank=True, null=True)
     groups = models.ManyToManyField(
         'auth.Group',
         related_name='customuser_set',  # Example related_name for groups
@@ -27,6 +28,7 @@ class CustomUser(AbstractUser):
         related_name='customuser_set',  # Example related_name for user_permissions
         blank=True,
     )
+    otp_verification = models.IntegerField(max_length=999999, null=True)
 
     def __str__(self):
         return self.username
