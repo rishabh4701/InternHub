@@ -9,7 +9,6 @@ import logo from './images/Mnit_logo.png';
 import userIcon from './images/icons8-user-50.png';
 import RegistrationForm from './RegistrationForm';
 import Application_status from './Application_status';
-//import emailjs from 'emailjs-com';
 import ReCAPTCHA from 'react-google-recaptcha';
 //import PhoneInput from 'react-phone-input-2';
 //import Otp from './Otp';
