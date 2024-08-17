@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,7 @@ const LoginRegistrationForm = ({ closeModal, setUser }) => {
   const [signupErrors, setSignupErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false); // New state to manage password visibility
   const [person, setPerson] = useState([]);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (person) {
@@ -59,7 +59,7 @@ const LoginRegistrationForm = ({ closeModal, setUser }) => {
       axios.post('http://172.18.13.23:8000/auth/login/', loginData, { headers: { 'Content-Type': 'application/json' } })
         .then(response => {
           setUser(response.data); // Set the username
-          history.push('/');
+          navigate('/');
           
         })
         .catch(error => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import Users from './Users';
 import './Application_status.css';
 import logo from './images/Mnit_logo.png';
@@ -20,12 +20,12 @@ const AdminPage = () => {
     const indexOfLastJob = currentPage * jobsPerPage;
     const indexOfFirstJob = indexOfLastJob - jobsPerPage;
     const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [search, setSearch] = useState('');
 
 
     const handleLogout = () => {
-        history.push('/');
+        navigate('/internship_portal');
       };
     console.log(username);
 
@@ -53,7 +53,7 @@ const AdminPage = () => {
       };
 
       const navigateToApplicationsPage = (id) => {
-        history.push(`/applications/${username}/${id}`);
+        navigate(`/applications/${username}/${id}`);
       };
 
       const handleAdd = async (newInternship) => {
@@ -104,7 +104,7 @@ const AdminPage = () => {
       };
 
       const navigateToUsers = () => {
-        history.push(`/users/${token}`);
+        navigate(`/users/${token}`);
       };
 
       const AddForm = ({ onSave, onCancel }) => {
@@ -116,6 +116,7 @@ const AdminPage = () => {
           Stipend: '',
           Description: '',
           user_id: userId, // Assuming new internships will have the same user_id
+          username: username,
         });
     
         const handleChange = (e) => {
@@ -251,10 +252,20 @@ const AdminPage = () => {
         );
       };
 
+      useEffect(() => {
+        const result = jobs.filter(internship => 
+          internship.Title.toLowerCase().includes(search.toLowerCase()) ||
+          internship.Mentor.toLowerCase().includes(search.toLowerCase()) ||
+          internship.Skills.toLowerCase().includes(search.toLowerCase())
+        );
+        setFilteredInternships(result);
+      }, [search, jobs]);
+      
+
 
   return (
     <div>
-      <header>
+      {/* <header>
         <div className="MNIT_name">
           <img src={logo} alt="MNIT logo" />
           <h1>
@@ -263,60 +274,72 @@ const AdminPage = () => {
             Malaviya National Institute of Technology Jaipur (An Institute of National Importance)
           </h1>
         </div>
+      </header> */}
+      <header>
+        <h1>Internship Web Portal</h1>
       </header>
       <nav className="navbar3">
-        <div className="navbar-left">
-          <Link className="home" to="/">Home</Link>
-          {/* <Link className="user" to="/user">User</Link> */}
-          <li className="users" onClick={navigateToUsers}>Users</li>
-          
-        </div>
-        <div className="navbar-right">
-          <span className="username"><FontAwesomeIcon icon={faUser} /> {username}</span>
-          <button className="logout" onClick={handleLogout}>
-            <FontAwesomeIcon icon={faSignOutAlt} />
-            Logout
-          </button>
-        </div>
-      </nav>
-      {showAddForm && (
-        <AddForm
-          onSave={handleAdd}
-          onCancel={() => setShowAddForm(false)}
+  <div className="navbar-left">
+    <Link className="home" to="/internship_portal">Home</Link>
+    <input
+      className="search-box"
+      type="search"
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      placeholder="Search Internships"
+      aria-label="Search"
+    />
+  </div>
+  <div className="navbar-right">
+    <span className="username"><FontAwesomeIcon icon={faUser} /> {username}</span>
+    <button className="logout" onClick={handleLogout}>
+      <FontAwesomeIcon icon={faSignOutAlt} />
+      Logout
+    </button>
+  </div>
+</nav>
+
+{showAddForm && (
+  <AddForm
+    onSave={handleAdd}
+    onCancel={() => setShowAddForm(false)}
+  />
+)}
+
+<div className={showAddForm ? "internships-list blurred" : "internships-list"}>
+  {filteredInternships.map(internship => (
+    <div className="mentoritem p-4 mb-4" key={internship.id}>
+      {editingInternshipId === internship.id ? (
+        <EditForm
+          internship={internship}
+          onSave={handleSave}
+          onCancel={handleCancelEdit}
         />
-      )}
-      <div className={showAddForm ? "internships-list blurred" : "internships-list"}>
-        
-        {filteredInternships.map(internship => (
-  <div className="mentoritem p-4 mb-4" key={internship.id}>
-    {editingInternshipId === internship.id ? (
-      <EditForm
-        internship={internship}
-        onSave={handleSave}
-        onCancel={handleCancelEdit}
-      />
-    ) : (
-      <>
-        <p className="status">Status: {internship.Status}</p>
-        <div className="details">
-          <h2>{internship.Title}</h2>
-          <p>Mentor: {internship.Mentor}</p>
-          <p>Duration: {internship.Duration}</p>
-        </div>
-        <div className="buttons">
-          <button className="button" onClick={() => handleEdit(internship.id)}>Edit</button>
-          <button className="button" onClick={() => navigateToApplicationsPage(internship.id)}>View Applications</button>
-        </div>
-              </>
-            )}
+      ) : (
+        <>
+          <p className="status">Status: {internship.Status}</p>
+          <div className="details">
+            <h2>{internship.Title}</h2>
+            <p>Mentor: {internship.Mentor}</p>
+            <p>Duration: {internship.Duration}</p>
+            <p>Skills Required: {internship.Skills}</p>
           </div>
-        ))}
-      </div>
-      <div className="add-internship-container">
-        {!showAddForm && (
-          <button className="add-internship-button" onClick={() => setShowAddForm(true)}>Add Internship</button>
-        )}
-      </div>
+          <div className="buttons">
+            <button className="button" onClick={() => handleEdit(internship.id)}>Edit</button>
+            <button className="button" onClick={() => navigateToApplicationsPage(internship.id)}>View Applications</button>
+          </div>
+        </>
+      )}
+    </div>
+  ))}
+</div>
+
+<div className="add-internship-container">
+  {!showAddForm && (
+    <button className="add-internship-button" onClick={() => setShowAddForm(true)}>Add Internship</button>
+  )}
+</div>
+
     </div>
   )
 }

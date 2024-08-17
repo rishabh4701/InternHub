@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import './Application_status.css';
 import logo from './images/Mnit_logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,7 +10,7 @@ const ApplicationStatus = () => {
   const [internshipDetails, setInternshipDetails] = useState([]);
   const [selectedInternship, setSelectedInternship] = useState(null);
   const { userId, username } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchStudents();
@@ -57,7 +57,7 @@ const ApplicationStatus = () => {
   };
 
   const handleLogout = () => {
-    history.push('/');
+    navigate('/internship_portal');
   };
 
   const handleShowDetails = (internshipId) => {
@@ -73,7 +73,7 @@ const ApplicationStatus = () => {
 
   return (
     <>
-      <header>
+      {/* <header>
         <div className="MNIT_name">
           <img src={logo} alt="MNIT logo" />
           <h1>
@@ -82,10 +82,13 @@ const ApplicationStatus = () => {
             Malaviya National Institute of Technology Jaipur (An Institute of National Importance)
           </h1>
         </div>
+      </header> */}
+      <header>
+        <h1>Internship Web Portal</h1>
       </header>
       <nav className="navbar3">
         <div className="navbar-left">
-          <Link className="home" to="/">Home</Link>
+          <Link className="home" to="/internship_portal">Home</Link>
         </div>
         <div className="navbar-right">
           <span className="username"><FontAwesomeIcon icon={faUser} /> {username}</span>
@@ -131,6 +134,7 @@ const ApplicationStatus = () => {
             <p><strong>Duration:</strong> {selectedInternship.Duration}</p>
             <p><strong>Stipend:</strong> {selectedInternship.Stipend}</p>
             <p><strong>Internship Status:</strong> {selectedInternship.Status}</p>
+            <p><strong>Skills Required:</strong> {selectedInternship.Skills}</p>
             <button onClick={handleCloseDetails}>Close</button>
           </div>
         )}

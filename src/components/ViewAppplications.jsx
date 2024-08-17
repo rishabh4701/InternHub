@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import './ViewApplication.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faUser, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import logo from './images/Mnit_logo.png';
+import * as XLSX from 'xlsx'; // Import the xlsx library
+import ApplicationStatus from './Application_status';
 
 const ViewApplicationsPage = () => {
   const {internshipId, username } = useParams();
   const [applications, setApplications] = useState([]);
+  const [selectedApplication, setSelectedApplication] = useState(null);
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [editingStatus, setEditingStatus] = useState(null);
   const [newStatus, setNewStatus] = useState("");
   const [filter, setFilter] = useState("all");
+  
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const fetchApplications = async () => {
     try {
@@ -72,7 +76,7 @@ const ViewApplicationsPage = () => {
   };
 
   const handleLogout = () => {
-    history.push('/');
+    navigate('/internship_portal');
   };
 
   const applyFilter = (filter, applications) => {
@@ -83,7 +87,7 @@ const ViewApplicationsPage = () => {
       filtered = applications.filter(app => app.status === "Not Shortlisted");
     }
     else if (filter === "all") {
-      filtered= applications.filter(app => app.status === "Applied");
+      filtered= applications;
     }
     
     setFilteredApplications(filtered);
@@ -94,9 +98,33 @@ const ViewApplicationsPage = () => {
     applyFilter(newFilter, applications);
   };
 
+  const handleShowDetails = (id) => {
+    console.log("hi");
+    console.log(id);
+    const application = filteredApplications.find(application => application.id === parseInt(id));
+    setSelectedApplication(application);
+    console.log(selectedApplication);
+  };
+
+  const handleCloseDetails = () => {
+    setSelectedApplication(null);
+  };
+
+  const handleExportToExcel = () => {
+
+    const filteredApplications = applications.map(({ id, i_id, user_id, ...rest }) => rest);
+
+    const worksheet = XLSX.utils.json_to_sheet(filteredApplications);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Applications');
+
+    // Trigger a download of the Excel file
+    XLSX.writeFile(workbook, 'Applications.xlsx');
+  };
+
   return (
     <div>
-      <header>
+      {/* <header>
         <div className="MNIT_name">
           <img src={logo} alt="MNIT logo" />
           <h1>
@@ -105,10 +133,13 @@ const ViewApplicationsPage = () => {
             Malaviya National Institute of Technology Jaipur (An Institute of National Importance)
           </h1>
         </div>
+      </header> */}
+      <header>
+        <h1>Internship Web Portal</h1>
       </header>
       <nav className="navbar3">
         <div className="navbar-left">
-          <Link className="home" to="/">Home</Link>
+          <Link className="home" to="/internship_portal">Home</Link>
         </div>
         <div className="navbar-right">
           <span className="username"><FontAwesomeIcon icon={faUser} /> {username}</span>
@@ -118,7 +149,9 @@ const ViewApplicationsPage = () => {
           </button>
         </div>
       </nav>
-      <h3>Applications for Internship {internshipId}</h3>
+      <h3>Applications for Internship</h3>
+      
+      {/* <button onClick={handleExportToExcel} className="download-button">Download Excel</button> */}
       <div className='colomn'>
         <button className={`colomn-1 ${filter === 'all' ? 'active' : ''}`} onClick={() => handleFilterChange("all")}>All Applications</button>
         <button className={`colomn-2 ${filter === 'shortlisted' ? 'active' : ''}`} onClick={() => handleFilterChange("shortlisted")}>Shortlisted</button>
@@ -132,7 +165,9 @@ const ViewApplicationsPage = () => {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Resume</th>
+                <th>Id Card</th>
                 <th>Status</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -141,6 +176,7 @@ const ViewApplicationsPage = () => {
                   <td>{application.first_name} {application.last_name}</td>
                   <td>{application.email}</td>
                   <td><a href={application.resume} target="_blank" rel="noopener noreferrer">View</a></td>
+                  <td><a href={application.idCard} target="_blank" rel="noopener noreferrer">View</a></td>
                   <td className="status-cell">
                     {editingStatus && editingStatus.id === application.id ? (
                       <div className="status-actions">
@@ -159,13 +195,36 @@ const ViewApplicationsPage = () => {
                       </>
                     )}
                   </td>
+                  <td><FontAwesomeIcon icon={faInfoCircle} onClick={() => handleShowDetails(application.id)} /></td>
                 </tr>
+                
               ))}
+              {selectedApplication && (
+          <div className="details-card">
+            <h2>Application Details</h2>
+            <p><strong>First Name:</strong> {selectedApplication.first_name}</p>
+            <p><strong>Last Name:</strong> {selectedApplication.last_name}</p>
+            <p><strong>Address:</strong> {selectedApplication.adddress}</p>
+            <p><strong>Email:</strong> {selectedApplication.email}</p>
+            <p><strong>Phone number:</strong> {selectedApplication.phone_number}</p>
+            <p><strong>College:</strong> {selectedApplication.college_name}</p>
+            <p><strong>Department:</strong> {selectedApplication.department}</p>
+            <p><strong>Roll number:</strong> {selectedApplication.roll_no}</p>
+            <p><strong>Course:</strong> {selectedApplication.course}</p>
+            <p><strong>Skills:</strong> {selectedApplication.skills}</p>
+            <p><strong>Additional Skills:</strong> {selectedApplication.addskills}</p>
+            <button onClick={handleCloseDetails}>Close</button>
+          </div>)}
             </tbody>
           </table>
         ) : (
           <p>No applications found for this internship.</p>
         )}
+      </div>
+      <div className="add-internship-container">
+        
+        <button className="add-internship-button" onClick={handleExportToExcel}>Download Excel</button>
+        
       </div>
     </div>
   );

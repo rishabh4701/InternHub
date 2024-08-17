@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Registration.css';
 
-const RegistrationForm = ({ closeModal, userId, iId}) => {
+const RegistrationForm = ({ closeModal, userId, iId }) => {
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -16,12 +16,17 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
     course: '',
     year_of_study: '',
     resume: null,
+    idCard: null,
     user_id: '',  
-    i_id: ''  ,
-    status: ''   
+    i_id: '',  
+    status: '',  
+    skills: '',
+    addskills: 'none'
   });
 
+  const [availableSkills, setAvailableSkills] = useState([]); // State to store available skills
   const [resumeUploaded, setResumeUploaded] = useState(false);
+  const [idCardUploaded, setIdCardUploaded] = useState(false); // New state for ID card upload
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formErrors, setFormErrors] = useState({});
 
@@ -33,11 +38,35 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
 
   const courses = ['B.Tech', 'M.Tech'];
   const year_of_study = ['1', '2', '3', '4'];
- 
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/internships/${iId}/`);
+        const skillsArray = response.data.Skills.split(',').map(skill => skill.trim()); // Convert string to array and trim spaces
+        setAvailableSkills(skillsArray); // Set the available skills as an array
+      } catch (error) {
+        console.error('Error fetching skills:', error);
+      }
+    };
+
+    fetchSkills();
+  }, [iId]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, checked } = e.target;
+
+    if (type === 'checkbox') {
+      let updatedSkills = formData.skills.split(',').filter(skill => skill !== ''); // Convert string to array
+      if (checked) {
+        updatedSkills.push(value);
+      } else {
+        updatedSkills = updatedSkills.filter(skill => skill !== value);
+      }
+      setFormData({ ...formData, skills: updatedSkills.join(',') }); // Convert array back to string
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const validate = (values) => {
@@ -49,24 +78,43 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
     if (!/^\d{10}$/.test(values.phone_number)) {
       errors.phone_number = "Not a valid number";
     }
+
+    const selectedSkills = values.skills.split(',').filter(skill => skill !== '');
+    if (selectedSkills.length !== availableSkills.length) {
+    errors.skills = "Please select all the required skills";
+    }
     return errors;
   };
 
   const handleFileChange = (e) => {
+    const { name } = e.target;
     const file = e.target.files[0];
     if (file && file.type === 'application/pdf') {
       if (file.size <= 10 * 1024 * 1024) {
-        setFormData({ ...formData, resume: file, user_id: JSON.stringify(userId), i_id: JSON.stringify(iId) });
-        setResumeUploaded(true);
+        setFormData({ ...formData, [name]: file, user_id: JSON.stringify(userId), i_id: JSON.stringify(iId) });
+        if (name === 'resume') {
+          setResumeUploaded(true);
+        } else if (name === 'idCard') {
+          setIdCardUploaded(true);
+        }
+
       } else {
         alert('File size should not exceed 10 MB.');
         e.target.value = null; 
-        setResumeUploaded(false);
+        if (name === 'resume') {
+          setResumeUploaded(false);
+        } else if (name === 'idCard') {
+          setIdCardUploaded(false);
+        }
       }
     } else {
       alert('Please upload a PDF file.');
       e.target.value = null;
-      setResumeUploaded(false);
+      if (name === 'resume') {
+        setResumeUploaded(false);
+      } else if (name === 'idCard') {
+        setIdCardUploaded(false);
+      }
     }
   };
 
@@ -264,11 +312,52 @@ const RegistrationForm = ({ closeModal, userId, iId}) => {
               <span className="details">Upload Resume (PDF only, max 10MB) &#42;</span>
               <input
                 type="file"
+                name="resume"
                 accept="application/pdf"
                 onChange={handleFileChange}
                 required
               />
-              {resumeUploaded && <span className="upload-message">File has been uploaded</span>}
+              {resumeUploaded && <span className="upload-message">Resume has been uploaded</span>}
+            </div>
+            <div className="input-box">
+              <span className="details">Upload ID Card (PDF only, max 10MB) &#42;</span>
+              <input
+                type="file"
+                name="idCard" // New input for ID card
+                accept="application/pdf"
+                onChange={handleFileChange}
+                required
+              />
+              {idCardUploaded && <span className="upload-message">ID card has been uploaded</span>}
+            </div>
+            <div className="skill-box">
+          <span className="details">Skills Required &#42;</span>
+          {availableSkills.map((skill, index) => (
+            <div key={index} className='checkboxes'>
+              <label>
+                {skill}
+                <input 
+                  type="checkbox" 
+                  name="skills" 
+                  value={skill}
+                  checked={formData.skills.includes(skill)}
+                  onChange={handleChange}
+                />
+              </label>
+            </div>
+          ))}
+          {formErrors.skills && <p className="error">{formErrors.skills}</p>}
+        </div>
+            <div className="input-box">
+              <span className="details">Additional Skills (comma-separated) &#42;</span>
+              <input
+                type="text"
+                name="addskills"
+                placeholder="Enter your Additional Skills if any"
+                value={formData.addskills}
+                onChange={handleChange}
+                required
+              />
             </div>
             
           </div>

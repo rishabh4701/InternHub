@@ -175,3 +175,15 @@ AUTHENTICATION_BACKENDS = [
     # Add custom backends if necessary
 ]
 
+RECAPTCHA_SECRET_KEY = '6LeooCUqAAAAAGzt2scnrrCYjhcHjFBaC7MeKS-s'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Example: Gmail SMTP server
+# EMAIL_PORT = 587  # For secure connection, use 587
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
+
+# EMAIL_USE_TLS = True  # TLS is a must for secure SMTP
+EMAIL_HOST_USER = 'ballpython1421@gmail.com'  # Your email address
+EMAIL_HOST_PASSWORD = 'tvxsoqqwgbljcsyy'  # Your email password (or app password for Gmail)

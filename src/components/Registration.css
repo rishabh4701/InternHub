@@ -6,7 +6,7 @@
 .close1{
   float: right;
   position: absolute;
-  top: 33%;
+  top: 25%;
   left: 90%;
   cursor: pointer;
   font-size: 40px;
@@ -15,6 +15,7 @@
 }
 .container1 {
   margin-top: 40px;
+  margin-bottom: 40px;
   /* max-width: 700px; */
   width: 100%;
   background-color: #fff;
@@ -60,8 +61,18 @@ form .user-details .input-box {
   margin-bottom: 15px;
   width: calc(100% / 2 - 20px);
 }
+form .user-details .skill-box {
+  margin-bottom: 15px;
+  width: calc(100% / 2 - 20px);
+}
 
 form .input-box span.details {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+form .skill-box span.details {
   display: block;
   font-weight: 500;
   margin-bottom: 5px;
@@ -148,4 +159,39 @@ form .button input:hover {
   .container1 .content .category {
     flex-direction: column;
   }
+}
+
+.skills-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.skills-checkboxes label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  transition: background-color 0.2s ease;
+}
+
+.skills-checkboxes label:hover {
+  background-color: #e0e0e0;
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+.checkboxes{
+  display: flex;
+}
+.checkboxes input{
+  height:auto;
+  margin: 5px;
+
 }
