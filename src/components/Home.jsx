@@ -10,9 +10,7 @@ import userIcon from './images/icons8-user-50.png';
 import RegistrationForm from './RegistrationForm';
 import Application_status from './Application_status';
 import ReCAPTCHA from 'react-google-recaptcha';
-//import PhoneInput from 'react-phone-input-2';
-//import Otp from './Otp';
-//import 'react-phone-input-2/lib/style.css';
+
 
 const Home = () => {
   const [selectedJob, setSelectedJob] = useState(null);
@@ -34,11 +32,7 @@ const Home = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [i_id, seti_id] = useState(null);
   const [token, setToken] = useState('');
-  //const [email, setEmail] = useState('');
-  // const [otp, setOtp] = useState('');
-  // const [generatedOtp, setGeneratedOtp] = useState(null);
-  // const [otpSent, setOtpSent] = useState(false);
-  //const [isOtpVerified, setIsOtpVerified] = useState(false);
+  
   const [recaptchaToken, setRecaptchaToken] = useState('');
   //const [showOtp, setShowOtp] = useState('');
   //const [phone, setPhone] = useState("");
@@ -341,16 +335,16 @@ const resendOtpAPI = async (email) => {
 console.log(search);
   return (
     <div>
-      {/* <header>
+       {/* <header>
         <div className="MNIT_name">
           <img src={logo} alt="MNIT logo" />
           <h1>
-            मालवीय राष्ट्रीय प्रौद्योगिकी संस्थान जयपुर (राष्ट्रीय महत्व का संस्थान)
+            मालवीय राष्ट्रीय प्रौद्यो/गिकी संस्थान जयपुर (राष्ट्रीय महत्व का संस्थान)
             <br />
             Malaviya National Institute of Technology Jaipur (An Institute of National Importance)
           </h1>
         </div>
-      </header> */}
+      </header>  */}
       <header>
         <h1>Internship Web Portal</h1>
       </header>
