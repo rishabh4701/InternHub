@@ -100,38 +100,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'internship_portal.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'postgres',  # Replace with your database name
-#         'USER': 'postgres',      # Replace with your database user
-#         'PASSWORD': 'kanishq221613',  # Replace with your database password
-#         'HOST': 'localhost',   # Set to 'localhost' for local development
-#         'PORT': '5434',        # Default PostgreSQL port
-#     }
-# }
-
-# URL	jdbc:postgresql://localhost:5432/mnit_internship
-
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         conn_max_age=600,
-#         conn_health_checks=True,
-#     ),
-    
-# }
 
 import dj_database_url
 
 DATABASES = {
     'default': dj_database_url.parse(os.getenv('DB_URL'))
 }
-# postgres://postgres:kanishq221613@localhost:5434/postgres
-# Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -180,7 +155,7 @@ RECAPTCHA_SECRET_KEY = os.getenv('RECAPTCHA_SECRET_KEY')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Example: Gmail SMTP server
-# EMAIL_PORT = 587  # For secure connection, use 587
+
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
